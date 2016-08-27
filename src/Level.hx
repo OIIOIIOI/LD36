@@ -10,25 +10,38 @@ class Level
 	var stage:Int;
 	
 	var enemyTower:Tower;
+	var enemyKing:King;
 	var enemySoldiers:Array<Soldier>;
 	
 	var playerTower:Tower;
+	var playerKing:King;
 	var playerSoldiers:Array<Soldier>;
 	
 	public var entities:Array<Entity>;
+	
+	var state:LevelState;
+	var stateTick:Int;
 
 	public function new (stage:Int)
 	{
 		this.stage = stage;
 		
+		// Set starting state
+		state = CREATING;
+		nextState();
+		
 		entities = [];
 		
 		enemyTower = new Tower(false);
 		entities.push(enemyTower);
+		enemyKing = new King(false);
+		entities.push(enemyKing);
 		spawnEnemySoldiers();
 		
 		playerTower = new Tower(true);
 		entities.push(playerTower);
+		playerKing = new King(true);
+		entities.push(playerKing);
 		spawnPlayerSoldiers();
 	}
 	
@@ -75,6 +88,15 @@ class Level
 	
 	public function update ()
 	{
+		stateTick--;
+		if (stateTick <= 0)
+			nextState();
+		
+		enemyKing.x = enemyTower.x;
+		enemyKing.y = enemyTower.y - 48;
+		playerKing.x = playerTower.x;
+		playerKing.y = playerTower.y - 48;
+		
 		// Update level entities
 		for (e in entities) {
 			e.update();
@@ -85,4 +107,45 @@ class Level
 		playerSoldiers = playerSoldiers.filter(Game.INST.filterDead);
 	}
 	
+	public function nextState ()
+	{
+		switch (state) {
+			case SETTING_UP:
+				state = CHOOSING_FLAGS;
+				stateTick = 120;
+				chooseFlags();
+			case CHOOSING_FLAGS:
+				state = PROPAGATING;
+				stateTick = 120;
+			case PROPAGATING:
+				state = RESOLVING;
+				stateTick = 120;
+			case RESOLVING:
+				state = DONE;
+				stateTick = 120;
+			case DONE:
+				state = CHOOSING_FLAGS;
+				stateTick = 120;
+			default:
+				state = SETTING_UP;
+				stateTick = 120;
+		}
+		trace("changed state to "+state);
+	}
+	
+	public function chooseFlags ()
+	{
+		var flags = Flags.pickFlagPairs();
+		//trace(flags);
+	}
+	
+}
+
+enum LevelState {
+	CREATING;
+	SETTING_UP;
+	CHOOSING_FLAGS;
+	PROPAGATING;
+	RESOLVING;
+	DONE;
 }
