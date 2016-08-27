@@ -445,7 +445,10 @@ class Level
 			if (!forPlayer)	tx -= 32;
 			else			tx += 32;
 			
-			var ty = sy * tyArray.splice(Std.random(tyArray.length), 1)[0];
+			var i = 0;
+			if (tyArray.length > 2 && Std.random(4) == 0)	i = 1;
+			var ty = sy * tyArray.splice(i, 1)[0];
+			//var ty = sy * tyArray.shift();
 			ty += (Game.HEIGHT - 100) * 0.3;
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
 			
