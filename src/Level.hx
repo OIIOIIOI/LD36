@@ -88,9 +88,11 @@ class Level
 	
 	public function update ()
 	{
-		stateTick--;
-		if (stateTick <= 0)
-			nextState();
+		if (stateTick > 0) {
+			stateTick--;
+			if (stateTick <= 0)
+				nextState();
+		}
 		
 		enemyKing.x = enemyTower.x;
 		enemyKing.y = enemyTower.y - 48;
@@ -113,7 +115,8 @@ class Level
 		{
 			case CHOOSING_FLAGS:
 				state = PROPAGATING;
-				stateTick = 10 * enemySoldiers.length;
+				stateTick = propagate();
+				trace(stateTick);
 				
 			case PROPAGATING:
 				state = RESOLVING;
@@ -147,6 +150,19 @@ class Level
 		// Choose a random action and its corresponding flags
 		var currentAction = Actions.pickRandomAction();
 		trace("picked " + currentAction.action);
+	}
+	
+	function propagate () :Int
+	{
+		var tick = 20;
+		var i = 0;
+		for (s in enemySoldiers)
+		{
+			var t = 25 + (Std.random(2) * 2 - 1) * Std.random(15);
+			tick += t;
+			s.think(tick);
+		}
+		return tick;
 	}
 	
 }

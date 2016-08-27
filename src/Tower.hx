@@ -26,8 +26,7 @@ class Tower extends Entity
 	function updateAnim ()
 	{
 		// TODO Set anim depending on health and isPlayer
-		if (spriteID != Sprites.IDLE)
-			setAnim(Sprites.IDLE);
+		if (spriteID != Sprites.IDLE)	setAnim(Sprites.IDLE);
 	}
 	
 	public function hurt ()

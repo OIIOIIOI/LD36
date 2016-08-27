@@ -9,37 +9,51 @@ class Soldier extends Entity
 	
 	var isPlayer:Bool;
 	var health:Int;
+	
+	var thinkTick:Int;
+	
+	public var isThinking:Bool;
 
 	public function new (isPlayer:Bool) 
 	{
 		super();
 		
+		setAnim(Sprites.DEF_FRONT);
+		
 		this.isPlayer = isPlayer;
 		health = 1;
+		
+		thinkTick = -1;
+		isThinking = false;
 		
 		x = Std.random(Std.int(Game.WIDTH / 3));
 		y = Std.random(Game.HEIGHT - 100);
 		if (isPlayer)	x += Std.int(Game.WIDTH / 3 * 2);
-		
-		updateAnim();
 	}
 	
-	function updateAnim ()
+	override public function update() 
 	{
-		// TODO Set anim depending on health and isPlayer
-		if (isPlayer) {
-			if (spriteID != Sprites.ATK_UP)
-				setAnim(Sprites.ATK_UP);
-		} else {
-			if (spriteID != Sprites.ATK_FRONT)
-				setAnim(Sprites.ATK_FRONT);
+		super.update();
+		
+		if (thinkTick > 0) {
+			thinkTick--;
+			if (thinkTick <= 0) {
+				isThinking = false;
+				setAnim(Sprites.DEF_FRONT);
+			}
 		}
 	}
 	
 	public function hurt ()
 	{
 		health--;
-		updateAnim();
+	}
+	
+	public function think (t:Int)
+	{
+		thinkTick = t;
+		isThinking = true;
+		setAnim(Sprites.ATK_FRONT);
 	}
 	
 }
