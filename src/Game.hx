@@ -94,7 +94,8 @@ class Game extends Sprite
 	function render ()
 	{
 		// Render all graphics
-		canvasData.fillRect(canvasData.rect, 0xFF1F1111);
+		canvasData.fillRect(canvasData.rect, 0xFF000000);
+		//canvasData.fillRect(canvasData.rect, 0xFF1CEC96);
 		// Render level entities
 		for (e in level.entities) {
 			Sprites.draw(canvasData, e.spriteID, e.x + e.rox, e.y + e.roy, e.frame);

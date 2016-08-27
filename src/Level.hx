@@ -58,6 +58,8 @@ class Level
 		
 		entities = [];
 		
+		entities.push(new Battlefield());
+		
 		enemyTower = new Tower(false);
 		entities.push(enemyTower);
 		enemyKing = new King(false);
@@ -167,6 +169,15 @@ class Level
 		entities = entities.filter(Game.INST.filterDead);
 		enemySoldiers = enemySoldiers.filter(Game.INST.filterDead);
 		playerSoldiers = playerSoldiers.filter(Game.INST.filterDead);
+		// z-sort
+		entities.sort(zSort);
+	}
+	
+	function zSort (a:Entity, b:Entity)
+	{
+		if (a.y + a.cy > b.y + b.cy)		return 1;
+		else if (a.y + a.cy < b.y + b.cy)	return -1;
+		else								return 0;
 	}
 	
 	public function nextState ()
@@ -414,7 +425,7 @@ class Level
 		var a = (forPlayer) ? playerSoldiers : enemySoldiers;
 		var dir = (forPlayer) ? 1 : -1;
 		
-		var sy = (Game.HEIGHT * 0.75) / a.length;
+		var sy = (Game.HEIGHT * 0.5) / a.length;
 		var tyArray = new Array<Int>();
 		for (i in 0...a.length) {
 			tyArray.push(i);
@@ -424,7 +435,7 @@ class Level
 			var tx = line + (8 + Std.random(spread)) * dir;
 			if (!forPlayer)	tx -= 32;
 			var ty = sy * tyArray.splice(Std.random(tyArray.length), 1)[0];
-			ty += Game.HEIGHT * 0.15;
+			ty += Game.HEIGHT * 0.25;
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
 			s.moveTo(tx, ty);
 		}

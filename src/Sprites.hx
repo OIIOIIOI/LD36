@@ -9,7 +9,11 @@ import openfl.display.BitmapData;
  */
 class Sprites
 {
-
+	
+	static public var BATTLEFIELD:String = "battlefield";
+	static public var TOWER_LEFT:String = "tower_left";
+	static public var TOWER_RIGHT:String = "tower_right";
+	
 	static public var IDLE:String = "idle";
 	static public var SLEEP:String = "sleep";
 	static public var ATK_FRONT:String = "atk_front";
@@ -36,6 +40,11 @@ class Sprites
 		sprites = new Map();
 		
 		// Store all assets and animation infos
+		// Background
+		sprites.set(BATTLEFIELD, { data:Assets.getBitmapData("img/battle_field.png"), frames:1, delay:8 });
+		// Tower
+		sprites.set(TOWER_LEFT, { data:Assets.getBitmapData("img/tower.png"), frames:1, delay:8 });
+		sprites.set(TOWER_RIGHT, { data:Sprites.flipBitmapData(Assets.getBitmapData("img/tower.png")), frames:1, delay:8 });
 		// Soldiers
 		sprites.set(IDLE, { data:Assets.getBitmapData("img/idle.png"), frames:1, delay:8 });
 		sprites.set(SLEEP, { data:Assets.getBitmapData("img/sleep.png"), frames:1, delay:8 });

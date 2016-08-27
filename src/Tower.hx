@@ -17,16 +17,22 @@ class Tower extends Entity
 		this.isPlayer = isPlayer;
 		health = 3;
 		
-		y  = Game.HEIGHT - 200;
-		if (isPlayer)	x = Game.WIDTH - 100;
-		
 		updateAnim();
+		
+		if (isPlayer)	x = Game.WIDTH - w;
+		y = Game.HEIGHT - 100;
+		roy = -h + (Std.random(2) * 2 - 1) * 20;
 	}
 	
 	function updateAnim ()
 	{
-		// TODO Set anim depending on health and isPlayer
-		if (spriteID != Sprites.IDLE)	setAnim(Sprites.IDLE);
+		var anim = switch (health) {
+			//case 2:		(!isPlayer) ? Sprites.TOWER_LEFT_A : Sprites.TOWER_RIGHT_A;
+			//case 1:		(!isPlayer) ? Sprites.TOWER_LEFT_B : Sprites.TOWER_RIGHT_B;
+			//case 0:		(!isPlayer) ? Sprites.TOWER_LEFT_C : Sprites.TOWER_RIGHT_C;
+			default:	(!isPlayer) ? Sprites.TOWER_LEFT : Sprites.TOWER_RIGHT;
+		}
+		if (anim != spriteID)	setAnim(anim);
 	}
 	
 	public function hurt ()
