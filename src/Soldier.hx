@@ -34,8 +34,8 @@ class Soldier extends Entity
 		y = Std.random(Game.HEIGHT - 100);
 		if (isPlayer)	x += Std.int(Game.WIDTH / 3 * 2);
 		moveTo(x, y);
-		x = y = 0;
-		if (isPlayer)	x = Game.WIDTH - 32;
+		//x = y = 0;
+		//if (isPlayer)	x = Game.WIDTH - 32;
 	}
 	
 	override public function update() 
@@ -71,6 +71,7 @@ class Soldier extends Entity
 	public function hurt ()
 	{
 		health--;
+		isDead = health <= 0;
 	}
 	
 	public function think (t:Int)

@@ -176,6 +176,7 @@ class Level
 		// Choose a random action and its corresponding flags
 		enemyAction = Actions.pickRandomAction();
 		playerAction = ActionType.IDLE;
+		trace(enemySoldiers.length + " / " + playerSoldiers.length);
 	}
 	
 	function propagate () :Int
@@ -193,7 +194,131 @@ class Level
 	
 	function resolve ()
 	{
+		trace("Enemy action: " + enemyAction.action);
+		trace("Player action: " + playerAction);
+		trace("----");
 		
+		// Enemy attack from the front
+		if (enemyAction.action == ATTACK_FRONT)
+		{
+			switch (playerAction)
+			{
+				// Both lose a soldier
+				case ATTACK_FRONT:
+					trace("Both lose a soldier");
+					killRandomSoldier(true);
+					killRandomSoldier(false);
+					
+				// Player loses a soldier
+				case ATTACK_UP, DEFEND_UP, IDLE:
+					trace("Player loses a soldier");
+					killRandomSoldier(false);
+					
+				// Player tower is hurt
+				case SLEEP:
+					trace("Player tower is hurt");
+					
+				// Player defends successfully - nothing happens
+				case DEFEND_FRONT:
+					trace("Player defends successfully - nothing happens");
+			}
+		}
+		// Enemy attack from upwards
+		else if (enemyAction.action == ATTACK_UP)
+		{
+			switch (playerAction)
+			{
+				// Enemy loses a soldier
+				case ATTACK_FRONT:
+					trace("Enemy loses a soldier");
+					killRandomSoldier(true);
+					
+				// Both lose a soldier
+				case ATTACK_UP:
+					trace("Both lose a soldier");
+					killRandomSoldier(true);
+					killRandomSoldier(false);
+					
+				// Player loses a soldier
+				case DEFEND_FRONT, IDLE:
+					trace("Player loses a soldier");
+					killRandomSoldier(false);
+					
+				// Player defends successfully - nothing happens
+				case DEFEND_UP:
+					trace("Player defends successfully - nothing happens");
+					
+				// Player tower is hurt
+				case SLEEP:
+					trace("Player tower is hurt");
+			}
+		}
+		// Enemy defends front
+		else if (enemyAction.action == DEFEND_FRONT)
+		{
+			switch (playerAction)
+			{
+				// Enemy loses a soldier
+				case ATTACK_UP:
+					trace("Enemy loses a soldier");
+					killRandomSoldier(true);
+					
+				// Nothing happens
+				case ATTACK_FRONT, DEFEND_FRONT, DEFEND_UP, IDLE:
+					trace("Nothing happens");
+					
+				// Player regains a soldier
+				case SLEEP:
+					trace("Player regains a soldier");
+			}
+		}
+		// Enemy defends upwards
+		else if (enemyAction.action == DEFEND_UP)
+		{
+			switch (playerAction)
+			{
+				// Enemy loses a soldier
+				case ATTACK_FRONT:
+					trace("Enemy loses a soldier");
+					killRandomSoldier(true);
+					
+				// Nothing happens
+				case ATTACK_UP, DEFEND_FRONT, DEFEND_UP, IDLE:
+					trace("Nothing happens");
+					
+				// Player regains a soldier
+				case SLEEP:
+					trace("Player regains a soldier");
+			}
+		}
+		// Enemy sleeps
+		else if (enemyAction.action == SLEEP)
+		{
+			switch (playerAction)
+			{
+				// Enemy tower is hurt
+				case ATTACK_FRONT, ATTACK_UP:
+					trace("Enemy tower is hurt");
+					
+				// Enemy regains a soldier
+				case DEFEND_FRONT, DEFEND_UP, IDLE:
+					trace("Enemy regains a soldier");
+					
+				// Both regain a soldier
+				case SLEEP:
+					trace("Both regain a soldier");
+			}
+		}
+	}
+	
+	function killRandomSoldier (enemy:Bool)
+	{
+		var s = null;
+		if (enemy)	s = enemySoldiers[Std.random(enemySoldiers.length)];
+		else		s = playerSoldiers[Std.random(playerSoldiers.length)];
+		
+		s.hurt();
+		trace("isDead: " + s.isDead);
 	}
 	
 }
