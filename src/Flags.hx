@@ -46,15 +46,15 @@ class Flags
 		availableRightFlags = allRightFlags.concat([]);
 	}
 	
-	static public function pickFlagPairs ()
+	static public function pickFlagPairs () :Array<Flag>
 	{
 		// Refill available array if needed
 		if (availableLeftFlags.length == 0 || availableRightFlags.length == 0)
 			resetAvailable();
 		
 		return [
-			availableLeftFlags.splice(Std.random(availableLeftFlags.length), 1),
-			availableRightFlags.splice(Std.random(availableRightFlags.length), 1)
+			availableLeftFlags.splice(Std.random(availableLeftFlags.length), 1)[0],
+			availableRightFlags.splice(Std.random(availableRightFlags.length), 1)[0]
 		];
 	}
 	

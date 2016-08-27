@@ -109,41 +109,50 @@ class Level
 	
 	public function nextState ()
 	{
-		switch (state) {
-			case SETTING_UP:
-				state = CHOOSING_FLAGS;
-				stateTick = 120;
-				chooseFlags();
+		switch (state)
+		{
 			case CHOOSING_FLAGS:
 				state = PROPAGATING;
-				stateTick = 120;
+				stateTick = 10 * enemySoldiers.length;
+				
 			case PROPAGATING:
 				state = RESOLVING;
-				stateTick = 120;
+				stateTick = 60;
+				
 			case RESOLVING:
 				state = DONE;
-				stateTick = 120;
+				stateTick = 60;
+				
 			case DONE:
 				state = CHOOSING_FLAGS;
-				stateTick = 120;
+				stateTick = 60;
+				chooseAction();
+				
 			default:
-				state = SETTING_UP;
-				stateTick = 120;
+				state = DONE;
+				stateTick = 60;
+				setup();
 		}
 		trace("changed state to "+state);
 	}
 	
-	public function chooseFlags ()
+	function setup ()
 	{
-		var flags = Flags.pickFlagPairs();
-		//trace(flags);
+		// Associate existing flags pairs with each action
+		Actions.pairActionAndFlags();
+	}
+	
+	function chooseAction ()
+	{
+		// Choose a random action and its corresponding flags
+		var currentAction = Actions.pickRandomAction();
+		trace("picked " + currentAction.action);
 	}
 	
 }
 
 enum LevelState {
 	CREATING;
-	SETTING_UP;
 	CHOOSING_FLAGS;
 	PROPAGATING;
 	RESOLVING;
