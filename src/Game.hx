@@ -56,8 +56,6 @@ class Game extends Sprite
 	{
 		entities = [];
 		
-		entities.push(new Flag());
-		
 		level = new Level(0);
 	}
 	

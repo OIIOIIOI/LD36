@@ -156,10 +156,10 @@ class Level
 			}
 		}
 		
-		enemyKing.x = enemyTower.x;
-		enemyKing.y = enemyTower.y - 48;
-		playerKing.x = playerTower.x;
-		playerKing.y = playerTower.y - 48;
+		enemyKing.x = enemyTower.x + enemyTower.cx;
+		enemyKing.y = enemyTower.y + enemyTower.roy - enemyKing.cy;
+		playerKing.x = playerTower.x + playerTower.cx - playerKing.w;
+		playerKing.y = playerTower.y + playerTower.roy - playerKing.cy;
 		
 		// Update level entities
 		for (e in entities) {
@@ -169,8 +169,10 @@ class Level
 		entities = entities.filter(Game.INST.filterDead);
 		enemySoldiers = enemySoldiers.filter(Game.INST.filterDead);
 		playerSoldiers = playerSoldiers.filter(Game.INST.filterDead);
-		// z-sort
+		// Z-sort
 		entities.sort(zSort);
+		enemySoldiers.sort(zSort);
+		playerSoldiers.sort(zSort);
 	}
 	
 	function zSort (a:Entity, b:Entity)
@@ -425,18 +427,31 @@ class Level
 		var a = (forPlayer) ? playerSoldiers : enemySoldiers;
 		var dir = (forPlayer) ? 1 : -1;
 		
-		var sy = (Game.HEIGHT * 0.5) / a.length;
+		var sx = spread / a.length;
+		var txArray = new Array<Int>();
+		for (i in 0...a.length) {
+			txArray.push(i);
+		}
+		
+		var sy = ((Game.HEIGHT - 100) * 0.6) / a.length;
 		var tyArray = new Array<Int>();
 		for (i in 0...a.length) {
 			tyArray.push(i);
 		}
 		
 		for (s in a) {
-			var tx = line + (8 + Std.random(spread)) * dir;
+			var tx = line - spread / 2;
+			tx += sx * txArray.splice(Std.random(txArray.length), 1)[0];
 			if (!forPlayer)	tx -= 32;
-			var ty = sy * tyArray.splice(Std.random(tyArray.length), 1)[0];
-			ty += Game.HEIGHT * 0.25;
+			else			tx += 32;
+			
+			var i = 0;
+			if (tyArray.length > 2 && Std.random(4) == 0)	i = 1;
+			var ty = sy * tyArray.splice(i, 1)[0];
+			//var ty = sy * tyArray.shift();
+			ty += (Game.HEIGHT - 100) * 0.3;
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
+			
 			s.moveTo(tx, ty);
 		}
 	}

@@ -14,15 +14,9 @@ class King extends Entity
 		super();
 		
 		this.isPlayer = isPlayer;
+		setAnim(Sprites.ATK_UP);
 		
-		updateAnim();
-	}
-	
-	function updateAnim ()
-	{
-		// TODO Set anim depending on health and isPlayer
-		if (spriteID != Sprites.SLEEP)
-			setAnim(Sprites.SLEEP);
+		rox = (Std.random(2) * 2 - 1) * 8;
 	}
 	
 }
