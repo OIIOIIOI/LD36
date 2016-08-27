@@ -7,35 +7,28 @@ package;
 class Flags
 {
 	
-	static var positions:Array<FlagPosition>;
-	static var colours:Array<FlagColour>;
-	static var shapes:Array<FlagShape>;
-	
-	static var allLeftFlags:Array<Flag>;
-	static var availableLeftFlags:Array<Flag>;
-	static var allRightFlags:Array<Flag>;
-	static var availableRightFlags:Array<Flag>;
+	static var allLeftFlags:Array<FlagData>;
+	static var availableLeftFlags:Array<FlagData>;
+	static var allRightFlags:Array<FlagData>;
+	static var availableRightFlags:Array<FlagData>;
 	
 	static public function init ()
 	{
-		positions = [DOWN, UP];
-		colours = [COLOUR_A, COLOUR_B];
-		shapes = [SHAPE_A, SHAPE_B];
-		
 		allLeftFlags = [];
 		allRightFlags = [];
 		
-		for (p in positions)
-		{
-			for (c in colours)
-			{
-				for (s in shapes)
-				{
-					allLeftFlags.push({ side:LEFT, position:p, colour:c, shape:s });
-					allRightFlags.push({ side:RIGHT, position:p, colour:c, shape:s });
-				}
-			}
-		}
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_A_LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_B_LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_C_LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_D_LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_E_LEFT });
+		
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_A_RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_B_RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_C_RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_D_RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_E_RIGHT });
+		
 		resetAvailable();
 	}
 	
@@ -46,43 +39,26 @@ class Flags
 		availableRightFlags = allRightFlags.concat([]);
 	}
 	
-	static public function pickFlagPairs ()
+	static public function pickFlagPairs () :Array<FlagData>
 	{
 		// Refill available array if needed
 		if (availableLeftFlags.length == 0 || availableRightFlags.length == 0)
 			resetAvailable();
 		
 		return [
-			availableLeftFlags.splice(Std.random(availableLeftFlags.length), 1),
-			availableRightFlags.splice(Std.random(availableRightFlags.length), 1)
+			availableLeftFlags.splice(Std.random(availableLeftFlags.length), 1)[0],
+			availableRightFlags.splice(Std.random(availableRightFlags.length), 1)[0]
 		];
 	}
 	
 }
 
-typedef Flag = {
+typedef FlagData = {
 	side:FlagSide,
-	position:FlagPosition,
-	colour:FlagColour,
-	shape:FlagShape
+	variant:String
 }
 
 enum FlagSide {
 	LEFT;
 	RIGHT;
-}
-
-enum FlagPosition {
-	DOWN;
-	UP;
-}
-
-enum FlagColour {
-	COLOUR_A;
-	COLOUR_B;
-}
-
-enum FlagShape {
-	SHAPE_A;
-	SHAPE_B;
 }
