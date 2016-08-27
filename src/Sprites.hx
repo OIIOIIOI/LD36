@@ -9,8 +9,6 @@ import openfl.display.BitmapData;
 class Sprites
 {
 
-	static public var PLAYER:String = "player";
-	
 	static public var IDLE:String = "idle";
 	static public var SLEEP:String = "sleep";
 	static public var ATK_FRONT:String = "atk_front";
@@ -24,8 +22,6 @@ class Sprites
 	{
 		sprites = new Map();
 		// Store all assets and animation infos
-		sprites.set(PLAYER, { data:Assets.getBitmapData("img/player.png"), frames:2, delay:8 });
-		
 		sprites.set(IDLE, { data:Assets.getBitmapData("img/idle.png"), frames:1, delay:8 });
 		sprites.set(SLEEP, { data:Assets.getBitmapData("img/sleep.png"), frames:1, delay:8 });
 		sprites.set(ATK_FRONT, { data:Assets.getBitmapData("img/atk_front.png"), frames:1, delay:8 });
