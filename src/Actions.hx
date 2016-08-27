@@ -40,4 +40,5 @@ enum ActionType {
 	DEFEND_FRONT;
 	DEFEND_UP;
 	SLEEP;
+	IDLE;
 }

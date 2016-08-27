@@ -1,5 +1,9 @@
 package;
 
+
+import Actions;
+import openfl.ui.Keyboard;
+
 /**
  * ...
  * @author 01101101
@@ -21,6 +25,9 @@ class Level
 	
 	var state:LevelState;
 	var stateTick:Int;
+	
+	var enemyAction:Action;
+	var playerAction:ActionType;
 
 	public function new (stage:Int)
 	{
@@ -94,6 +101,25 @@ class Level
 				nextState();
 		}
 		
+		if (state == LevelState.PROPAGATING)
+		{
+			var prevAction = playerAction;
+			// Check controls
+			if (Controls.isDown(Keyboard.LEFT))
+				playerAction = ActionType.ATTACK_FRONT;
+			else if (Controls.isDown(Keyboard.UP))
+				playerAction = ActionType.ATTACK_UP;
+			else if (Controls.isDown(Keyboard.RIGHT))
+				playerAction = ActionType.DEFEND_FRONT;
+			else if (Controls.isDown(Keyboard.DOWN))
+				playerAction = ActionType.DEFEND_UP;
+			else if (Controls.isDown(Keyboard.SPACE))
+				playerAction = ActionType.SLEEP;
+			// Update UI
+			if (prevAction != playerAction)
+				trace("new action chosen: " + playerAction);
+		}
+		
 		enemyKing.x = enemyTower.x;
 		enemyKing.y = enemyTower.y - 48;
 		playerKing.x = playerTower.x;
@@ -116,11 +142,11 @@ class Level
 			case CHOOSING_FLAGS:
 				state = PROPAGATING;
 				stateTick = propagate();
-				trace(stateTick);
 				
 			case PROPAGATING:
 				state = RESOLVING;
 				stateTick = 60;
+				resolve();
 				
 			case RESOLVING:
 				state = DONE;
@@ -148,8 +174,8 @@ class Level
 	function chooseAction ()
 	{
 		// Choose a random action and its corresponding flags
-		var currentAction = Actions.pickRandomAction();
-		trace("picked " + currentAction.action);
+		enemyAction = Actions.pickRandomAction();
+		playerAction = ActionType.IDLE;
 	}
 	
 	function propagate () :Int
@@ -163,6 +189,11 @@ class Level
 			s.think(tick);
 		}
 		return tick;
+	}
+	
+	function resolve ()
+	{
+		
 	}
 	
 }
