@@ -31,8 +31,8 @@ class Soldier extends Entity
 		isThinking = false;
 		
 		x = 0;
-		y = 0;
-		if (isPlayer)	x = Game.WIDTH;
+		y = Game.HEIGHT / 2 - cy;
+		if (isPlayer)	x = Game.WIDTH - w;
 		moveTo(x, y);
 		//x = y = 0;
 		//if (isPlayer)	x = Game.WIDTH - 32;

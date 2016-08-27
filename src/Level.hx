@@ -52,8 +52,6 @@ class Level
 		PLAYER_FRONT_LINE = Std.int(Game.WIDTH * 0.7);
 		MIDDLE_LINE = Std.int(Game.WIDTH * 0.5);
 		
-		//NARROW_SPREAD = NORMAL_SPREAD = LARGE_SPREAD = 0;
-		
 		// Set starting state
 		state = CREATING;
 		nextState();

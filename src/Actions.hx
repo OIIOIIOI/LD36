@@ -31,7 +31,7 @@ class Actions
 
 typedef Action = {
 	action:ActionType,
-	flags:Array<Flag>
+	flags:Array<FlagData>
 }
 
 enum ActionType {
