@@ -11,6 +11,19 @@ import openfl.ui.Keyboard;
 class Level
 {
 	
+	static public var ENEMY_TOWER_LINE:Int;
+	static public var PLAYER_TOWER_LINE:Int;
+	static public var ENEMY_FRONT_LINE:Int;
+	static public var PLAYER_FRONT_LINE:Int;
+	static public var MIDDLE_LINE:Int;
+	
+	static public var NARROW_SPREAD:Int = 16;
+	static public var NORMAL_SPREAD:Int = 32;
+	static public var LARGE_SPREAD:Int = 128;
+	
+	var enemySoldiersMax:Int;
+	var playerSoldiersMax:Int;
+	
 	var stage:Int;
 	
 	var enemyTower:Tower;
@@ -32,6 +45,14 @@ class Level
 	public function new (stage:Int)
 	{
 		this.stage = stage;
+		
+		ENEMY_TOWER_LINE = Std.int(Game.WIDTH * 0.125);
+		PLAYER_TOWER_LINE = Std.int(Game.WIDTH * 0.875);
+		ENEMY_FRONT_LINE = Std.int(Game.WIDTH * 0.3);
+		PLAYER_FRONT_LINE = Std.int(Game.WIDTH * 0.7);
+		MIDDLE_LINE = Std.int(Game.WIDTH * 0.5);
+		
+		//NARROW_SPREAD = NORMAL_SPREAD = LARGE_SPREAD = 0;
 		
 		// Set starting state
 		state = CREATING;
@@ -55,8 +76,8 @@ class Level
 	function spawnEnemySoldiers ()
 	{
 		// Set number of soldiers depending on stage
-		var n =  switch (stage) {
-			default:	7;
+		enemySoldiersMax =  switch (stage) {
+			default:	5;
 		}
 		// Reset array
 		if (enemySoldiers == null) {
@@ -67,7 +88,7 @@ class Level
 			}
 		}
 		// Create soldiers
-		for (i in 0...n) {
+		for (i in 0...enemySoldiersMax) {
 			var s = new Soldier(false);
 			enemySoldiers.push(s);
 			entities.push(s);
@@ -76,7 +97,7 @@ class Level
 	
 	function spawnPlayerSoldiers ()
 	{
-		var n = 7;
+		playerSoldiersMax = 7;
 		// Reset array
 		if (playerSoldiers == null) {
 			playerSoldiers = new Array();
@@ -86,7 +107,7 @@ class Level
 			}
 		}
 		// Create soldiers
-		for (i in 0...n) {
+		for (i in 0...playerSoldiersMax) {
 			var s = new Soldier(true);
 			playerSoldiers.push(s);
 			entities.push(s);
@@ -101,9 +122,8 @@ class Level
 				nextState();
 		}
 		
-		if (state == LevelState.PROPAGATING)
+		if (state == LevelState.PROPAGATING && playerAction == IDLE)
 		{
-			var prevAction = playerAction;
 			// Check controls
 			if (Controls.isDown(Keyboard.LEFT))
 				playerAction = ActionType.ATTACK_FRONT;
@@ -116,8 +136,24 @@ class Level
 			else if (Controls.isDown(Keyboard.SPACE))
 				playerAction = ActionType.SLEEP;
 			// Update UI
-			if (prevAction != playerAction)
+			if (playerAction != IDLE)
 				trace("new action chosen: " + playerAction);
+		}
+		else if (state == LevelState.RESOLVING)
+		{
+			// Wait for soldiers to stop moving
+			if (stateTick <= 0 && !soldiersAreMoving())
+			{
+				stateTick = 60;
+			}
+		}
+		else if (state == LevelState.DONE)
+		{
+			// Wait for soldiers to stop moving
+			if (stateTick <= 0 && !soldiersAreMoving())
+			{
+				stateTick = 60;
+			}
 		}
 		
 		enemyKing.x = enemyTower.x;
@@ -145,12 +181,14 @@ class Level
 				
 			case PROPAGATING:
 				state = RESOLVING;
-				stateTick = 60;
+				//stateTick = 60;
 				resolve();
 				
 			case RESOLVING:
 				state = DONE;
-				stateTick = 60;
+				//stateTick = 60;
+				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD);
+				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD);
 				
 			case DONE:
 				state = CHOOSING_FLAGS;
@@ -176,7 +214,6 @@ class Level
 		// Choose a random action and its corresponding flags
 		enemyAction = Actions.pickRandomAction();
 		playerAction = ActionType.IDLE;
-		trace(enemySoldiers.length + " / " + playerSoldiers.length);
 	}
 	
 	function propagate () :Int
@@ -194,9 +231,35 @@ class Level
 	
 	function resolve ()
 	{
-		trace("Enemy action: " + enemyAction.action);
-		trace("Player action: " + playerAction);
+		trace(enemyAction.action + " vs " + playerAction);
 		trace("----");
+		
+		switch (enemyAction.action)
+		{
+			case ATTACK_FRONT:
+				if (playerAction == ATTACK_FRONT)	moveSoldiers(false, MIDDLE_LINE, NORMAL_SPREAD);
+				else if (playerAction == SLEEP)		moveSoldiers(false, PLAYER_TOWER_LINE, NORMAL_SPREAD);
+				else								moveSoldiers(false, PLAYER_FRONT_LINE, NORMAL_SPREAD);
+			case ATTACK_UP, DEFEND_UP:
+				moveSoldiers(false, ENEMY_FRONT_LINE, NORMAL_SPREAD);
+			case DEFEND_FRONT:
+				moveSoldiers(false, ENEMY_FRONT_LINE, NARROW_SPREAD);
+			case SLEEP, IDLE:
+				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD);
+		}
+		switch (playerAction)
+		{
+			case ATTACK_FRONT:
+				if (enemyAction.action == ATTACK_FRONT)	moveSoldiers(true, MIDDLE_LINE, NORMAL_SPREAD);
+				else if (enemyAction.action == SLEEP)	moveSoldiers(true, ENEMY_TOWER_LINE, NORMAL_SPREAD);
+				else									moveSoldiers(true, ENEMY_FRONT_LINE, NORMAL_SPREAD);
+			case ATTACK_UP, DEFEND_UP:
+				moveSoldiers(true, PLAYER_FRONT_LINE, NORMAL_SPREAD);
+			case DEFEND_FRONT:
+				moveSoldiers(true, PLAYER_FRONT_LINE, NARROW_SPREAD);
+			case SLEEP, IDLE:
+				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD);
+		}
 		
 		// Enemy attack from the front
 		if (enemyAction.action == ATTACK_FRONT)
@@ -206,21 +269,22 @@ class Level
 				// Both lose a soldier
 				case ATTACK_FRONT:
 					trace("Both lose a soldier");
-					killRandomSoldier(true);
-					killRandomSoldier(false);
+					//killRandomSoldier(false);
+					//killRandomSoldier(true);
 					
 				// Player loses a soldier
 				case ATTACK_UP, DEFEND_UP, IDLE:
 					trace("Player loses a soldier");
-					killRandomSoldier(false);
-					
-				// Player tower is hurt
-				case SLEEP:
-					trace("Player tower is hurt");
+					//killRandomSoldier(true);
 					
 				// Player defends successfully - nothing happens
 				case DEFEND_FRONT:
 					trace("Player defends successfully - nothing happens");
+					
+				// Player tower is hurt
+				case SLEEP:
+					trace("Player tower is hurt - player regains a soldier");
+					//spawnNewSoldier(true);
 			}
 		}
 		// Enemy attack from upwards
@@ -231,18 +295,18 @@ class Level
 				// Enemy loses a soldier
 				case ATTACK_FRONT:
 					trace("Enemy loses a soldier");
-					killRandomSoldier(true);
+					//killRandomSoldier(false);
 					
 				// Both lose a soldier
 				case ATTACK_UP:
 					trace("Both lose a soldier");
-					killRandomSoldier(true);
-					killRandomSoldier(false);
+					//killRandomSoldier(false);
+					//killRandomSoldier(true);
 					
 				// Player loses a soldier
 				case DEFEND_FRONT, IDLE:
 					trace("Player loses a soldier");
-					killRandomSoldier(false);
+					//killRandomSoldier(true);
 					
 				// Player defends successfully - nothing happens
 				case DEFEND_UP:
@@ -250,7 +314,8 @@ class Level
 					
 				// Player tower is hurt
 				case SLEEP:
-					trace("Player tower is hurt");
+					trace("Player tower is hurt - player regains a soldier");
+					spawnNewSoldier(true);
 			}
 		}
 		// Enemy defends front
@@ -261,15 +326,20 @@ class Level
 				// Enemy loses a soldier
 				case ATTACK_UP:
 					trace("Enemy loses a soldier");
-					killRandomSoldier(true);
+					//killRandomSoldier(false);
+					
+				// Enemy defends successfully - nothing happens
+				case ATTACK_FRONT:
+					trace("Enemy defends successfully - nothing happens");
 					
 				// Nothing happens
-				case ATTACK_FRONT, DEFEND_FRONT, DEFEND_UP, IDLE:
+				case DEFEND_FRONT, DEFEND_UP, IDLE:
 					trace("Nothing happens");
 					
 				// Player regains a soldier
 				case SLEEP:
 					trace("Player regains a soldier");
+					spawnNewSoldier(true);
 			}
 		}
 		// Enemy defends upwards
@@ -280,7 +350,7 @@ class Level
 				// Enemy loses a soldier
 				case ATTACK_FRONT:
 					trace("Enemy loses a soldier");
-					killRandomSoldier(true);
+					//killRandomSoldier(false);
 					
 				// Nothing happens
 				case ATTACK_UP, DEFEND_FRONT, DEFEND_UP, IDLE:
@@ -289,6 +359,7 @@ class Level
 				// Player regains a soldier
 				case SLEEP:
 					trace("Player regains a soldier");
+					spawnNewSoldier(true);
 			}
 		}
 		// Enemy sleeps
@@ -296,29 +367,84 @@ class Level
 		{
 			switch (playerAction)
 			{
+				// Enemy tower is hurt, player soldiers charge
+				case ATTACK_FRONT:
+					trace("Enemy tower is hurt - enemy regains a soldier");
+					//spawnNewSoldier(false);
+					
 				// Enemy tower is hurt
-				case ATTACK_FRONT, ATTACK_UP:
-					trace("Enemy tower is hurt");
+				case ATTACK_UP:
+					trace("Enemy tower is hurt - enemy regains a soldier");
+					spawnNewSoldier(false);
 					
 				// Enemy regains a soldier
 				case DEFEND_FRONT, DEFEND_UP, IDLE:
 					trace("Enemy regains a soldier");
+					spawnNewSoldier(false);
 					
 				// Both regain a soldier
 				case SLEEP:
 					trace("Both regain a soldier");
+					spawnNewSoldier(true);
+					spawnNewSoldier(false);
 			}
 		}
 	}
 	
-	function killRandomSoldier (enemy:Bool)
+	function killRandomSoldier (forPlayer:Bool)
 	{
 		var s = null;
-		if (enemy)	s = enemySoldiers[Std.random(enemySoldiers.length)];
-		else		s = playerSoldiers[Std.random(playerSoldiers.length)];
-		
+		if (forPlayer)	s = playerSoldiers[Std.random(playerSoldiers.length)];
+		else			s = enemySoldiers[Std.random(enemySoldiers.length)];
 		s.hurt();
-		trace("isDead: " + s.isDead);
+	}
+	
+	function spawnNewSoldier (forPlayer:Bool)
+	{
+		// Abort if already at max
+		if ((forPlayer && playerSoldiers.length >= playerSoldiersMax) || (!forPlayer && enemySoldiers.length >= enemySoldiersMax))
+			return;
+		
+		var s = new Soldier(forPlayer);
+		if (forPlayer)	playerSoldiers.push(s);
+		else			enemySoldiers.push(s);
+		entities.push(s);
+	}
+	
+	function moveSoldiers (forPlayer:Bool, line:Int, spread:Int)
+	{
+		var a = (forPlayer) ? playerSoldiers : enemySoldiers;
+		var dir = (forPlayer) ? 1 : -1;
+		
+		var sy = (Game.HEIGHT * 0.75) / a.length;
+		var tyArray = new Array<Int>();
+		for (i in 0...a.length) {
+			tyArray.push(i);
+		}
+		
+		for (s in a) {
+			var tx = line + (8 + Std.random(spread)) * dir;
+			if (!forPlayer)	tx -= 32;
+			var ty = sy * tyArray.splice(Std.random(tyArray.length), 1)[0];
+			ty += Game.HEIGHT * 0.15;
+			ty += (Std.random(2) * 2 - 1) * Std.random(16);
+			s.moveTo(tx, ty);
+		}
+	}
+	
+	function soldiersAreMoving () :Bool
+	{
+		for (s in enemySoldiers)
+		{
+			if (s.isMoving())
+				return true;
+		}
+		for (s in playerSoldiers)
+		{
+			if (s.isMoving())
+				return true;
+		}
+		return false;
 	}
 	
 }

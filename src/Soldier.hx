@@ -16,8 +16,8 @@ class Soldier extends Entity
 	
 	var targetX:Float;
 	var targetY:Float;
-	var speed:Float = 3;
-
+	var speed:Float = 5;
+	
 	public function new (isPlayer:Bool) 
 	{
 		super();
@@ -30,9 +30,9 @@ class Soldier extends Entity
 		thinkTick = -1;
 		isThinking = false;
 		
-		x = Std.random(Std.int(Game.WIDTH / 3));
-		y = Std.random(Game.HEIGHT - 100);
-		if (isPlayer)	x += Std.int(Game.WIDTH / 3 * 2);
+		x = 0;
+		y = 0;
+		if (isPlayer)	x = Game.WIDTH;
 		moveTo(x, y);
 		//x = y = 0;
 		//if (isPlayer)	x = Game.WIDTH - 32;
@@ -51,9 +51,9 @@ class Soldier extends Entity
 			x += Game.TAP.x;
 			y += Game.TAP.y;
 			
-			if (Math.abs(x - targetX) < 2)
+			if (Math.abs(x - targetX) < speed)
 				x = targetX;
-			if (Math.abs(y - targetY) < 2)
+			if (Math.abs(y - targetY) < speed)
 				y = targetY;
 		}
 		
@@ -63,7 +63,7 @@ class Soldier extends Entity
 			if (thinkTick <= 0) {
 				isThinking = false;
 				setAnim(Sprites.DEF_FRONT);
-				moveTo(x + (Std.random(2) * 2 - 1) * Std.random(10), y + (Std.random(2) * 2 - 1) * Std.random(20));
+				//moveTo(x + (Std.random(2) * 2 - 1) * Std.random(10), y + (Std.random(2) * 2 - 1) * Std.random(20));
 			}
 		}
 	}
@@ -85,6 +85,11 @@ class Soldier extends Entity
 	{
 		targetX = tx;
 		targetY = ty;
+	}
+	
+	public function isMoving () :Bool
+	{
+		return (x != targetX || y != targetY);
 	}
 	
 }
