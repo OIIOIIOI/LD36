@@ -14,8 +14,10 @@ class Main extends Sprite
 	{
 		super();
 		
-		// Assets:
-		// openfl.Assets.getBitmapData("img/assetname.jpg");
+		Sprites.init();
+		Controls.init();
+		
+		Lib.current.stage.addChild(new Game());
 	}
 
 }
