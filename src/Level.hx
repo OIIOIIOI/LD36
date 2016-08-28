@@ -190,10 +190,10 @@ class Level
 			}
 		}
 		
-		enemyKing.x = enemyTower.x + enemyTower.cx - 16;
-		enemyKing.y = enemyTower.y + enemyTower.roy - enemyKing.cy;
-		playerKing.x = playerTower.x + playerTower.cx - playerKing.w + 16;
-		playerKing.y = playerTower.y + playerTower.roy - playerKing.cy;
+		enemyKing.x = enemyTower.x + enemyTower.cx - 8;
+		enemyKing.y = enemyTower.y + enemyTower.roy - enemyKing.cy - 10;
+		playerKing.x = playerTower.x + playerTower.cx - playerKing.w + 8;
+		playerKing.y = playerTower.y + playerTower.roy - playerKing.cy - 10;
 		
 		// Update level entities
 		for (e in entities) {
@@ -286,7 +286,7 @@ class Level
 			case ActionType.REST:
 				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 			case ActionType.IDLE:
-				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
+				//moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 		}
 		
 		// Move player soldiers
@@ -305,7 +305,7 @@ class Level
 			case ActionType.REST:
 				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 			case ActionType.IDLE:
-				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
+				//moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 		}
 		
 		// RESOLVE ALL CASES
