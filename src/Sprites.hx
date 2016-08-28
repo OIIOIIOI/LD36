@@ -28,11 +28,16 @@ class Sprites
 	static public var FLAG_C:String = "flag_c";
 	static public var FLAG_D:String = "flag_d";
 	static public var FLAG_E:String = "flag_e";
+	static public var FLAG_F:String = "flag_f";
+	static public var FLAG_G:String = "flag_g";
+	static public var FLAG_H:String = "flag_h";
+	static public var FLAG_I:String = "flag_i";
+	static public var FLAG_J:String = "flag_j";
 	
 	static public var ARROW:String = "arrow";
 	
 	static var sprites:Map<String, SpriteSheet>;
-
+	
 	static public function init ()
 	{
 		sprites = new Map();
@@ -56,17 +61,27 @@ class Sprites
 		sprites.set(DEF_FRONT + RIGHT,	flipAnim(DEF_FRONT + LEFT));
 		sprites.set(DEF_UP + RIGHT,		flipAnim(DEF_UP + LEFT));
 		// Flags
-		sprites.set(FLAG_A + RIGHT,	{ data:Assets.getBitmapData("img/flag_a.png"), frames:1, delay:8 });
+		sprites.set(FLAG_A + RIGHT,	{ data:Assets.getBitmapData("img/flag_a.png"), frames:2, delay:8 });
 		sprites.set(FLAG_B + RIGHT,	{ data:Assets.getBitmapData("img/flag_b.png"), frames:2, delay:8 });
 		sprites.set(FLAG_C + RIGHT,	{ data:Assets.getBitmapData("img/flag_c.png"), frames:2, delay:8 });
 		sprites.set(FLAG_D + RIGHT,	{ data:Assets.getBitmapData("img/flag_d.png"), frames:2, delay:8 });
 		sprites.set(FLAG_E + RIGHT,	{ data:Assets.getBitmapData("img/flag_e.png"), frames:2, delay:8 });
+		sprites.set(FLAG_F + RIGHT,	{ data:Assets.getBitmapData("img/flag_f.png"), frames:2, delay:8 });
+		sprites.set(FLAG_G + RIGHT,	{ data:Assets.getBitmapData("img/flag_g.png"), frames:2, delay:8 });
+		sprites.set(FLAG_H + RIGHT,	{ data:Assets.getBitmapData("img/flag_h.png"), frames:2, delay:8 });
+		sprites.set(FLAG_I + RIGHT,	{ data:Assets.getBitmapData("img/flag_i.png"), frames:2, delay:8 });
+		sprites.set(FLAG_J + RIGHT,	{ data:Assets.getBitmapData("img/flag_j.png"), frames:2, delay:8 });
 		// Flags flipped
 		sprites.set(FLAG_A + LEFT,	flipAnim(FLAG_A + RIGHT));
 		sprites.set(FLAG_B + LEFT,	flipAnim(FLAG_B + RIGHT));
 		sprites.set(FLAG_C + LEFT,	flipAnim(FLAG_C + RIGHT));
 		sprites.set(FLAG_D + LEFT,	flipAnim(FLAG_D + RIGHT));
 		sprites.set(FLAG_E + LEFT,	flipAnim(FLAG_E + RIGHT));
+		sprites.set(FLAG_F + LEFT,	flipAnim(FLAG_F + RIGHT));
+		sprites.set(FLAG_G + LEFT,	flipAnim(FLAG_G + RIGHT));
+		sprites.set(FLAG_H + LEFT,	flipAnim(FLAG_H + RIGHT));
+		sprites.set(FLAG_I + LEFT,	flipAnim(FLAG_I + RIGHT));
+		sprites.set(FLAG_J + LEFT,	flipAnim(FLAG_J + RIGHT));
 		// Arrows
 		sprites.set(ARROW + LEFT,	{ data:Assets.getBitmapData("img/arrow.png"), frames:10, delay:8 });
 		sprites.set(ARROW + RIGHT,	flipAnim(ARROW + LEFT));

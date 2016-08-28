@@ -22,12 +22,22 @@ class Flags
 		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_C + Sprites.LEFT });
 		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_D + Sprites.LEFT });
 		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_E + Sprites.LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_F + Sprites.LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_G + Sprites.LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_H + Sprites.LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_I + Sprites.LEFT });
+		allLeftFlags.push({ side:LEFT, variant:Sprites.FLAG_J + Sprites.LEFT });
 		
 		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_A + Sprites.RIGHT });
 		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_B + Sprites.RIGHT });
 		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_C + Sprites.RIGHT });
 		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_D + Sprites.RIGHT });
 		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_E + Sprites.RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_F + Sprites.RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_G + Sprites.RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_H + Sprites.RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_I + Sprites.RIGHT });
+		allRightFlags.push({ side:RIGHT, variant:Sprites.FLAG_J + Sprites.RIGHT });
 		
 		resetAvailable();
 	}

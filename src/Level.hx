@@ -190,9 +190,9 @@ class Level
 			}
 		}
 		
-		enemyKing.x = enemyTower.x + enemyTower.cx;
+		enemyKing.x = enemyTower.x + enemyTower.cx - 16;
 		enemyKing.y = enemyTower.y + enemyTower.roy - enemyKing.cy;
-		playerKing.x = playerTower.x + playerTower.cx - playerKing.w;
+		playerKing.x = playerTower.x + playerTower.cx - playerKing.w + 16;
 		playerKing.y = playerTower.y + playerTower.roy - playerKing.cy;
 		
 		// Update level entities
@@ -230,8 +230,8 @@ class Level
 				
 			case RESOLVING:
 				state = DONE;
-				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE, true);
-				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE, true);
+				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.ATK_FRONT, true, true);
+				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.ATK_FRONT, true, true);
 				
 			case DONE:
 				state = CHOOSING_FLAGS;
@@ -247,7 +247,7 @@ class Level
 	
 	function chooseAction ()
 	{
-		// Choose a random action and its corresponding flags
+		// Choose a random action and its correspondidsng flags
 		enemyAction = Actions.pickRandomAction();
 		playerAction = ActionType.IDLE;
 	}
@@ -465,7 +465,7 @@ class Level
 		s.moveTo(tx, ty, true);
 	}
 	
-	function moveSoldiers (forPlayer:Bool, line:Int, spread:Int, anim:String = "", comingBack:Bool = false)
+	function moveSoldiers (forPlayer:Bool, line:Int, spread:Int, anim:String = "", comingBack:Bool = false, idleOnArrival:Bool = false)
 	{
 		var a = (forPlayer) ? playerSoldiers : enemySoldiers;
 		var dir = (forPlayer) ? 1 : -1;
@@ -491,7 +491,7 @@ class Level
 			ty += (Game.HEIGHT - 100) * 0.3;
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
 			
-			s.moveTo(tx, ty);
+			s.moveTo(tx, ty, idleOnArrival);
 			s.isComingBack = comingBack;
 			if (anim != "")	s.setAnim(anim);
 		}
