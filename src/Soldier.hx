@@ -81,7 +81,7 @@ class Soldier extends Entity
 		
 		id += (dir == 1) ? Sprites.LEFT : Sprites.RIGHT;
 		
-		super.setAnim(id, randomStart, keepState);
+		super.setAnim(id, true, keepState);
 	}
 	
 	public function hurt ()

@@ -230,8 +230,8 @@ class Level
 				
 			case RESOLVING:
 				state = DONE;
-				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.ATK_FRONT, true, true);
-				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.ATK_FRONT, true, true);
+				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.RUN, true, true);
+				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.RUN, true, true);
 				
 			case DONE:
 				state = CHOOSING_FLAGS;
@@ -461,7 +461,7 @@ class Level
 		var tower = (forPlayer) ? playerTower : enemyTower;
 		s.y = tower.y + tower.roy + 100;
 		
-		s.setAnim(Sprites.ATK_FRONT);
+		s.setAnim(Sprites.RUN);
 		s.moveTo(tx, ty, true);
 	}
 	

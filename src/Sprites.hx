@@ -22,6 +22,7 @@ class Sprites
 	static public var ATK_UP:String = "atk_up";
 	static public var DEF_FRONT:String = "def_front";
 	static public var DEF_UP:String = "def_up";
+	static public var RUN:String = "run";
 	
 	static public var FLAG_A:String = "flag_a";
 	static public var FLAG_B:String = "flag_b";
@@ -49,17 +50,19 @@ class Sprites
 		sprites.set(TOWER + LEFT,	{ data:Assets.getBitmapData("img/tower.png"), frames:1, delay:8 });
 		sprites.set(TOWER + RIGHT,	flipAnim(TOWER + LEFT));
 		// Soldiers
-		sprites.set(IDLE + LEFT,		{ data:Assets.getBitmapData("img/idle.png"), frames:4, delay:8 });
-		sprites.set(ATK_FRONT + LEFT,	{ data:Assets.getBitmapData("img/atk_front.png"), frames:7, delay:8 });
+		sprites.set(IDLE + LEFT,		{ data:Assets.getBitmapData("img/idle.png"), frames:4, delay:12 });
+		sprites.set(ATK_FRONT + LEFT,	{ data:Assets.getBitmapData("img/atk_front.png"), frames:7, delay:5 });
 		sprites.set(ATK_UP + LEFT,		{ data:Assets.getBitmapData("img/atk_up.png"), frames:4, delay:8 });
-		sprites.set(DEF_FRONT + LEFT,	{ data:Assets.getBitmapData("img/def_front.png"), frames:4, delay:8 });
-		sprites.set(DEF_UP + LEFT,		{ data:Assets.getBitmapData("img/def_up.png"), frames:4, delay:8 });
+		sprites.set(DEF_FRONT + LEFT,	{ data:Assets.getBitmapData("img/def_front.png"), frames:4, delay:12 });
+		sprites.set(DEF_UP + LEFT,		{ data:Assets.getBitmapData("img/def_up.png"), frames:4, delay:12 });
+		sprites.set(RUN + LEFT	,		{ data:Assets.getBitmapData("img/run.png"), frames:7, delay:5 });
 		// Soldiers flipped
 		sprites.set(IDLE + RIGHT,		flipAnim(IDLE + LEFT));
 		sprites.set(ATK_FRONT + RIGHT,	flipAnim(ATK_FRONT + LEFT));
 		sprites.set(ATK_UP + RIGHT,		flipAnim(ATK_UP + LEFT));
 		sprites.set(DEF_FRONT + RIGHT,	flipAnim(DEF_FRONT + LEFT));
 		sprites.set(DEF_UP + RIGHT,		flipAnim(DEF_UP + LEFT));
+		sprites.set(RUN + RIGHT,		flipAnim(RUN + LEFT));
 		// Flags
 		sprites.set(FLAG_A + RIGHT,	{ data:Assets.getBitmapData("img/flag_a.png"), frames:2, delay:8 });
 		sprites.set(FLAG_B + RIGHT,	{ data:Assets.getBitmapData("img/flag_b.png"), frames:2, delay:8 });
