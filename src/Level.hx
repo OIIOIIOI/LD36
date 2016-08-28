@@ -73,6 +73,7 @@ class Level
 		
 		// Spawn battlefield
 		entities.push(new Battlefield());
+		entities.push(new UIWood());
 		
 		// Spawn enemy tower and king
 		enemyTower = new Tower(false);

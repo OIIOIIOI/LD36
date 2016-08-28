@@ -14,6 +14,8 @@ class Sprites
 	static public var RIGHT:String = "_right";
 	static public var LEFT:String = "_left";
 	
+	static public var UI_WOOD:String = "ui_wood";
+	
 	static public var BATTLEFIELD:String = "battlefield";
 	static public var TOWER:String = "tower";
 	
@@ -45,7 +47,8 @@ class Sprites
 		sprites = new Map();
 		
 		// Store all assets and animation infos
-		// Background
+		// UI and background
+		sprites.set(UI_WOOD, { data:Assets.getBitmapData("img/ui_wood.png"), frames:1, delay:8 });
 		sprites.set(BATTLEFIELD, { data:Assets.getBitmapData("img/battle_field.png"), frames:1, delay:8 });
 		// Tower
 		sprites.set(TOWER + LEFT,	{ data:Assets.getBitmapData("img/tower.png"), frames:1, delay:8 });
