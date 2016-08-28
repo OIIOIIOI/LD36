@@ -19,6 +19,7 @@ class Soldier extends Entity
 	var speed:Float = 5;
 
 	public var isComingBack:Bool;
+	var idleOnArrival:Bool;
 	
 	public function new (isPlayer:Bool) 
 	{
@@ -33,6 +34,7 @@ class Soldier extends Entity
 		isThinking = false;
 		
 		isComingBack = false;
+		idleOnArrival = false;
 		
 		x = 0;
 		y = Game.HEIGHT / 2 - cy;
@@ -57,6 +59,10 @@ class Soldier extends Entity
 				x = targetX;
 			if (Math.abs(y - targetY) < speed)
 				y = targetY;
+			if (idleOnArrival && x == targetX && y == targetY) {
+				idleOnArrival = false;
+				setAnim(Sprites.IDLE);
+			}
 		}
 		
 		// Thinking
@@ -90,10 +96,11 @@ class Soldier extends Entity
 		isThinking = true;
 	}
 	
-	public function moveTo (tx:Float, ty:Float)
+	public function moveTo (tx:Float, ty:Float, idleOnArrival = false)
 	{
 		targetX = tx;
 		targetY = ty;
+		this.idleOnArrival = idleOnArrival;
 	}
 	
 	public function isMoving () :Bool

@@ -2,6 +2,7 @@ package;
 
 
 import Actions;
+import haxe.Timer;
 import openfl.ui.Keyboard;
 
 /**
@@ -46,71 +47,83 @@ class Level
 	{
 		this.stage = stage;
 		
-		ENEMY_TOWER_LINE = Std.int(Game.WIDTH * 0.125);
-		PLAYER_TOWER_LINE = Std.int(Game.WIDTH * 0.875);
+		ENEMY_TOWER_LINE = 65;
+		PLAYER_TOWER_LINE = Game.WIDTH - 140;
 		ENEMY_FRONT_LINE = Std.int(Game.WIDTH * 0.3);
 		PLAYER_FRONT_LINE = Std.int(Game.WIDTH * 0.7);
 		MIDDLE_LINE = Std.int(Game.WIDTH * 0.5);
 		
-		// Set starting state
-		state = CREATING;
-		nextState();
+		// Associate existing flags pairs with each action
+		Actions.pairActionAndFlags();
 		
-		entities = [];
-		
-		entities.push(new Battlefield());
-		
-		enemyTower = new Tower(false);
-		entities.push(enemyTower);
-		enemyKing = new King(false);
-		entities.push(enemyKing);
-		spawnEnemySoldiers();
-		
-		playerTower = new Tower(true);
-		entities.push(playerTower);
-		playerKing = new King(true);
-		entities.push(playerKing);
-		spawnPlayerSoldiers();
-	}
-	
-	function spawnEnemySoldiers ()
-	{
-		// Set number of soldiers depending on stage
+		// Set max soldiers
+		playerSoldiersMax = 7;
 		enemySoldiersMax =  switch (stage) {
 			default:	5;
 		}
-		// Reset array
-		if (enemySoldiers == null) {
-			enemySoldiers = new Array();
-		} else {
-			while (enemySoldiers.length > 0) {
-				enemySoldiers.pop().isDead = true;
-			}
-		}
-		// Create soldiers
+		
+		// Set starting state
+		state = CREATING;
+		stateTick = 0;
+		
+		entities = [];
+		
+		// Spawn battlefield
+		entities.push(new Battlefield());
+		
+		// Spawn enemy tower and king
+		enemyTower = new Tower(false);
+		enemyKing = new King(false);
+		entities.push(enemyTower);
+		entities.push(enemyKing);
+		// Spawn enemy soldiers
+		enemySoldiers = new Array();
+		// Prepare positions
+		var sx = LARGE_SPREAD / enemySoldiersMax;
+		var sy = ((Game.HEIGHT - 100) * 0.6) / enemySoldiersMax;
+		var txArray = new Array<Int>();
+		var tyArray = new Array<Int>();
 		for (i in 0...enemySoldiersMax) {
-			var s = new Soldier(false);
-			enemySoldiers.push(s);
-			entities.push(s);
+			txArray.push(i);
+			tyArray.push(i);
 		}
-	}
-	
-	function spawnPlayerSoldiers ()
-	{
-		playerSoldiersMax = 7;
-		// Reset array
-		if (playerSoldiers == null) {
-			playerSoldiers = new Array();
-		} else {
-			while (playerSoldiers.length > 0) {
-				playerSoldiers.pop().isDead = true;
-			}
+		// Spawn and move in turn
+		for (i in 0...enemySoldiersMax)
+		{
+			var tx = ENEMY_FRONT_LINE - LARGE_SPREAD / 2;
+			tx += sx * txArray.splice(Std.random(txArray.length), 1)[0] - 32;
+			var ty = sy * tyArray.splice(Std.random(tyArray.length), 1)[0];
+			ty += (Game.HEIGHT - 100) * 0.3;
+			ty += (Std.random(2) * 2 - 1) * Std.random(16);
+			Timer.delay(spawnNewSoldier.bind(false, Std.int(tx), Std.int(ty)), (i+1) * 200 + (Std.random(2) * 2 - 1) * Std.random(150));
 		}
-		// Create soldiers
+		
+		// Spawn player tower and king
+		playerTower = new Tower(true);
+		playerKing = new King(true);
+		entities.push(playerTower);
+		entities.push(playerKing);
+		
+		// Spawn player soldiers
+		playerSoldiers = new Array();
+		// Prepare positions
+		var sx = LARGE_SPREAD / playerSoldiersMax;
+		var sy = ((Game.HEIGHT - 100) * 0.6) / playerSoldiersMax;
+		var txArray = new Array<Int>();
+		var tyArray = new Array<Int>();
 		for (i in 0...playerSoldiersMax) {
-			var s = new Soldier(true);
-			playerSoldiers.push(s);
-			entities.push(s);
+			txArray.push(i);
+			tyArray.push(i);
+		}
+		// Spawn and move in turn
+		for (i in 0...playerSoldiersMax)
+		{
+			var tx = PLAYER_FRONT_LINE - LARGE_SPREAD / 2;
+			tx += sx * txArray.splice(Std.random(txArray.length), 1)[0] + 32;
+			var ty = sy * tyArray.splice(Std.random(tyArray.length), 1)[0];
+			ty += (Game.HEIGHT - 100) * 0.3;
+			ty += (Std.random(2) * 2 - 1) * Std.random(16);
+			Timer.delay(spawnNewSoldier.bind(true, Std.int(tx), Std.int(ty)), (i+1) * 200 + (Std.random(2) * 2 - 1) * Std.random(150));
 		}
 	}
 	
@@ -148,6 +161,21 @@ class Level
 		else if (state == LevelState.DONE)
 		{
 			// Wait for soldiers to stop moving
+			if (stateTick <= 0 && !soldiersAreMoving())
+			{
+				for (s in enemySoldiers) {
+					s.isComingBack = Std.random(2) == 0;
+					s.setAnim(Sprites.IDLE);
+				}
+				for (s in playerSoldiers) {
+					s.isComingBack = Std.random(2) == 0;
+					s.setAnim(Sprites.IDLE);
+				}
+				stateTick = 60;
+			}
+		}
+		else if (state == LevelState.CREATING)
+		{
 			if (stateTick <= 0 && !soldiersAreMoving())
 			{
 				for (s in enemySoldiers) {
@@ -213,15 +241,8 @@ class Level
 			default:
 				state = DONE;
 				stateTick = 60;
-				setup();
 		}
 		trace("changed state to "+state);
-	}
-	
-	function setup ()
-	{
-		// Associate existing flags pairs with each action
-		Actions.pairActionAndFlags();
 	}
 	
 	function chooseAction ()
@@ -342,7 +363,7 @@ class Level
 				// Player tower is hurt
 				case ActionType.REST:
 					trace("Player tower is hurt - player regains a soldier");
-					spawnNewSoldier(true);
+					//spawnNewSoldier(true, playerTower.x - 32, playerTower.y - 200);
 			}
 		}
 		// Enemy defends front
@@ -366,7 +387,7 @@ class Level
 				// Player regains a soldier
 				case ActionType.REST:
 					trace("Player regains a soldier");
-					spawnNewSoldier(true);
+					//spawnNewSoldier(true, playerTower.x - 32, playerTower.y - 200);
 			}
 		}
 		// Enemy defends upwards
@@ -386,7 +407,7 @@ class Level
 				// Player regains a soldier
 				case ActionType.REST:
 					trace("Player regains a soldier");
-					spawnNewSoldier(true);
+					//spawnNewSoldier(true, playerTower.x - 32, playerTower.y - 200);
 			}
 		}
 		// Enemy sleeps
@@ -402,18 +423,18 @@ class Level
 				// Enemy tower is hurt
 				case ActionType.ATTACK_UP:
 					trace("Enemy tower is hurt - enemy regains a soldier");
-					spawnNewSoldier(false);
+					//spawnNewSoldier(false);
 					
 				// Enemy regains a soldier
 				case ActionType.DEFEND_FRONT, ActionType.DEFEND_UP, ActionType.IDLE:
 					trace("Enemy regains a soldier");
-					spawnNewSoldier(false);
+					//spawnNewSoldier(false);
 					
 				// Both regain a soldier
 				case ActionType.REST:
 					trace("Both regain a soldier");
-					spawnNewSoldier(true);
-					spawnNewSoldier(false);
+					//spawnNewSoldier(true);
+					//spawnNewSoldier(false);
 			}
 		}
 	}
@@ -426,7 +447,7 @@ class Level
 		s.hurt();
 	}
 	
-	function spawnNewSoldier (forPlayer:Bool)
+	function spawnNewSoldier (forPlayer:Bool, tx:Int, ty:Int)
 	{
 		// Abort if already at max
 		if ((forPlayer && playerSoldiers.length >= playerSoldiersMax) || (!forPlayer && enemySoldiers.length >= enemySoldiersMax))
@@ -436,6 +457,12 @@ class Level
 		if (forPlayer)	playerSoldiers.push(s);
 		else			enemySoldiers.push(s);
 		entities.push(s);
+		
+		var tower = (forPlayer) ? playerTower : enemyTower;
+		s.y = tower.y + tower.roy + 100;
+		
+		s.setAnim(Sprites.ATK_FRONT);
+		s.moveTo(tx, ty, true);
 	}
 	
 	function moveSoldiers (forPlayer:Bool, line:Int, spread:Int, anim:String = "", comingBack:Bool = false)
@@ -444,14 +471,11 @@ class Level
 		var dir = (forPlayer) ? 1 : -1;
 		
 		var sx = spread / a.length;
-		var txArray = new Array<Int>();
-		for (i in 0...a.length) {
-			txArray.push(i);
-		}
-		
 		var sy = ((Game.HEIGHT - 100) * 0.6) / a.length;
+		var txArray = new Array<Int>();
 		var tyArray = new Array<Int>();
 		for (i in 0...a.length) {
+			txArray.push(i);
 			tyArray.push(i);
 		}
 		
@@ -464,7 +488,6 @@ class Level
 			var i = 0;
 			if (tyArray.length > 2 && Std.random(4) == 0)	i = 1;
 			var ty = sy * tyArray.splice(i, 1)[0];
-			//var ty = sy * tyArray.shift();
 			ty += (Game.HEIGHT - 100) * 0.3;
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
 			
