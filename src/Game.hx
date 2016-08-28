@@ -33,7 +33,7 @@ class Game extends Sprite
 	
 	public var currentScreen:Screen;
 	
-	//public var level:Level;
+	public var stageDifficulty:Int = 0;
 
 	public function new () 
 	{
@@ -50,15 +50,14 @@ class Game extends Sprite
 		canvas.x = canvas.y = 0;
 		addChild(canvas);
 		
-		reset();
-		
 		addEventListener(Event.ENTER_FRAME, update);
+		
+		changeScreen(new TitleScreen());
 	}
 	
-	function reset ()
+	public function changeScreen (s:Screen)
 	{
-		//currentScreen = new TitleScreen();
-		currentScreen = new Level(0);
+		currentScreen = s;
 	}
 	
 	function update (e:Event)
@@ -69,7 +68,6 @@ class Game extends Sprite
 			currentScreen.update();
 			currentScreen.filterDead();
 			currentScreen.postUpdate();
-			
 			// Render
 			currentScreen.render(canvasData);
 		}
@@ -94,18 +92,6 @@ class Game extends Sprite
 	{
 		return !e.isDead;
 	}
-	
-	/*function render ()
-	{
-		// Clear canvas
-		canvasData.fillRect(canvasData.rect, 0xFF808080);
-		// Return if nothing to draw
-		if (currentScreen == null)	return;
-		// Render entities
-		for (e in currentScreen.entities) {
-			Sprites.draw(canvasData, e.spriteID, e.x + e.rox, e.y + e.roy, e.frame);
-		}
-	}*/
 	
 	public function shake (amount:Int, duration:Int, mode:ShakeMode = null)
 	{

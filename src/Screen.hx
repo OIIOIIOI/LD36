@@ -40,7 +40,7 @@ class Screen
 	public function render (canvasData:BitmapData)
 	{
 		// Clear canvas
-		canvasData.fillRect(canvasData.rect, 0xFF808080);
+		canvasData.fillRect(canvasData.rect, 0xFF1CEC96);
 		// Render entities
 		renderArray(entities, canvasData);
 	}

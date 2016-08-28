@@ -52,12 +52,18 @@ class Level extends Screen
 	
 	var enemySoldiersUI:UISoldiers;
 	var playerSoldiersUI:UISoldiers;
+	
+	var gameIsOver:Bool;
+	
+	var buttons:Buttons;
 
 	public function new (stage:Int)
 	{
 		super();
 		
 		this.stage = stage;
+		
+		gameIsOver = false;
 		
 		ENEMY_TOWER_LINE = 65;
 		PLAYER_TOWER_LINE = Game.WIDTH - 140;
@@ -142,6 +148,8 @@ class Level extends Screen
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
 			Timer.delay(spawnNewSoldier.bind(true, Std.int(tx), Std.int(ty)), (i+1) * 200 + (Std.random(2) * 2 - 1) * Std.random(150));
 		}
+		
+		buttons = new Buttons();
 	}
 	
 	override public function update ()
@@ -155,19 +163,26 @@ class Level extends Screen
 		if (state == LevelState.PROPAGATING && playerAction == ActionType.IDLE)
 		{
 			// Check controls
-			if (Controls.isDown(Keyboard.LEFT))
+			if (Controls.isDown(Keyboard.LEFT)) {
 				playerAction = ActionType.ATTACK_FRONT;
-			else if (Controls.isDown(Keyboard.UP))
+				buttons.select(0);
+			}
+			else if (Controls.isDown(Keyboard.UP)) {
 				playerAction = ActionType.ATTACK_UP;
-			else if (Controls.isDown(Keyboard.RIGHT))
+				buttons.select(0);
+			}
+			else if (Controls.isDown(Keyboard.RIGHT)) {
 				playerAction = ActionType.DEFEND_FRONT;
-			else if (Controls.isDown(Keyboard.DOWN))
+				buttons.select(0);
+			}
+			else if (Controls.isDown(Keyboard.DOWN)) {
 				playerAction = ActionType.DEFEND_UP;
-			else if (Controls.isDown(Keyboard.SPACE))
+				buttons.select(0);
+			}
+			else if (Controls.isDown(Keyboard.SPACE)) {
 				playerAction = ActionType.REST;
-			// Update UI
-			//if (playerAction != ActionType.IDLE)
-				//trace("new action chosen: " + playerAction);
+				buttons.select(4);
+			}
 		}
 		else if (state == LevelState.MOVING)
 		{
@@ -226,20 +241,28 @@ class Level extends Screen
 				stateTick = 60;
 			}
 		}
+		else if (state == LevelState.DEFEAT || state == LevelState.VICTORY)
+		{
+			if (Controls.isDown(Keyboard.SPACE))
+				Game.INST.changeScreen(new TitleScreen());
+		}
 		
 		enemyKing.x = enemyTower.x + enemyTower.cx - 27;
 		enemyKing.y = enemyTower.y + enemyTower.roy - enemyKing.cy - 15;
 		if (enemyTower.health == 2)			enemyKing.y += 45;
-		else if (enemyTower.health == 1)	enemyKing.y += 130;
+		else if (enemyTower.health <= 1)	enemyKing.y += 130;
 		
 		playerKing.x = playerTower.x + playerTower.cx - playerKing.w + 27;
 		playerKing.y = playerTower.y + playerTower.roy - playerKing.cy - 15;
-		if (playerTower.health == 2)			playerKing.y += 45;
-		else if (playerTower.health == 1)	playerKing.y += 130;
+		if (playerTower.health == 2)		playerKing.y += 45;
+		else if (playerTower.health <= 1)	playerKing.y += 130;
 		
 		// Update
 		super.update();
 		for (e in emotes) {
+			e.update();
+		}
+		for (e in buttons.entities) {
 			e.update();
 		}
 		
@@ -262,6 +285,9 @@ class Level extends Screen
 		for (e in emotes) {
 			e.postUpdate();
 		}
+		for (e in buttons.entities) {
+			e.postUpdate();
+		}
 		// Z-sort
 		enemySoldiers.sort(zSort);
 		playerSoldiers.sort(zSort);
@@ -272,6 +298,7 @@ class Level extends Screen
 	{
 		super.render(canvasData);
 		renderArray(emotes, canvasData);
+		renderArray(buttons.entities, canvasData);
 	}
 	
 	function zSort (a:Entity, b:Entity)
@@ -287,6 +314,7 @@ class Level extends Screen
 		{
 			case LevelState.CHOOSING_FLAGS:
 				state = LevelState.PROPAGATING;
+				buttons.allowChoice();
 				stateTick = propagate();
 				
 			case LevelState.PROPAGATING:
@@ -315,9 +343,11 @@ class Level extends Screen
 				stateTick = 10;
 				chooseAction();
 				
-			default:
+			case LevelState.CREATING:
 				state = LevelState.DONE;
 				stateTick = 120;
+				
+			default:
 		}
 		trace(Date.now().getTime() + ": changed state to " + state);
 	}
@@ -686,6 +716,14 @@ class Level extends Screen
 		var king = (forPlayer) ? playerKing : enemyKing;
 		
 		tower.hurt();
+		if (tower.health == 0)
+		{
+			gameIsOver = true;
+			state = (forPlayer) ? LevelState.DEFEAT : LevelState.VICTORY;
+			
+			var bannerText = new BannerText(!forPlayer);
+			entities.push(bannerText);
+		}
 	}
 	
 }
@@ -697,4 +735,6 @@ enum LevelState {
 	MOVING;
 	RESOLVING;
 	DONE;
+	DEFEAT;
+	VICTORY;
 }

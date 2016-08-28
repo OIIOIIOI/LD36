@@ -18,6 +18,10 @@ class Sprites
 	static public var BATTLEFIELD:String = "battlefield";
 	static public var PARCHMENT:String = "parchment";
 	static public var UI_SOLDIER_BAR:String = "ui_soldier_bar";
+	static public var BANNER_DEFEAT:String = "banner_defeat";
+	static public var BANNER_VICTORY:String = "banner_victory";
+	static public var BUTTON:String = "button";
+	static public var BUTTON_ICON:String = "button_icon";
 	
 	static public var TOWER_A:String = "tower_a";
 	static public var TOWER_B:String = "tower_b";
@@ -64,6 +68,10 @@ class Sprites
 		sprites.set(PARCHMENT + LEFT, { data:Assets.getBitmapData("img/parchment.png"), frames:1, delay:8 });
 		sprites.set(PARCHMENT + RIGHT, flipAnim(PARCHMENT + LEFT));
 		sprites.set(UI_SOLDIER_BAR, { data:Assets.getBitmapData("img/ui_bar_soldier.png"), frames:2, delay:9999 });
+		sprites.set(BANNER_DEFEAT, { data:Assets.getBitmapData("img/popup_defeat.png"), frames:1, delay:8 });
+		sprites.set(BANNER_VICTORY, { data:Assets.getBitmapData("img/popup_victory.png"), frames:1, delay:8 });
+		sprites.set(BUTTON, { data:Assets.getBitmapData("img/btn_action.png"), frames:4, delay:8 });
+		sprites.set(BUTTON_ICON, { data:Assets.getBitmapData("img/btn_icon.png"), frames:5, delay:8 });
 		// Tower
 		sprites.set(TOWER_A + LEFT,	{ data:Assets.getBitmapData("img/tower_1.png"), frames:1, delay:8 });
 		sprites.set(TOWER_A + RIGHT,	flipAnim(TOWER_A + LEFT));
@@ -116,7 +124,7 @@ class Sprites
 		sprites.set(ARROW + RIGHT,	flipAnim(ARROW + LEFT));
 		// Emotes
 		sprites.set(EMOTE_READY,	{ data:Assets.getBitmapData("img/icon_ready.png"), frames:4, delay:8 });
-		sprites.set(EMOTE_REST,		{ data:Assets.getBitmapData("img/icon_sleep.png"), frames:4, delay:8 });
+		sprites.set(EMOTE_REST,		{ data:Assets.getBitmapData("img/icon_sleep.png"), frames:5, delay:8 });
 		sprites.set(EMOTE_THINK,	{ data:Assets.getBitmapData("img/icon_think.png"), frames:4, delay:8 });
 		// FX
 		sprites.set(BLOOD,	{ data:Assets.getBitmapData("img/blood_floor.png"), frames:8, delay:8 });
