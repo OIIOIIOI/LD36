@@ -165,11 +165,11 @@ class Level extends Screen
 			// Check controls
 			if (Controls.isDown(Keyboard.LEFT)) {
 				playerAction = ActionType.ATTACK_FRONT;
-				buttons.select(0);
+				buttons.select(2);
 			}
 			else if (Controls.isDown(Keyboard.UP)) {
 				playerAction = ActionType.ATTACK_UP;
-				buttons.select(0);
+				buttons.select(3);
 			}
 			else if (Controls.isDown(Keyboard.RIGHT)) {
 				playerAction = ActionType.DEFEND_FRONT;
@@ -177,7 +177,7 @@ class Level extends Screen
 			}
 			else if (Controls.isDown(Keyboard.DOWN)) {
 				playerAction = ActionType.DEFEND_UP;
-				buttons.select(0);
+				buttons.select(1);
 			}
 			else if (Controls.isDown(Keyboard.SPACE)) {
 				playerAction = ActionType.REST;
@@ -329,6 +329,7 @@ class Level extends Screen
 				
 			case LevelState.RESOLVING:
 				state = LevelState.DONE;
+				buttons.reset();
 				// Send soldiers back to the tower
 				if (playerAction == ActionType.ATTACK_FRONT)
 					moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.RUN, true, true);

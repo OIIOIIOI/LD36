@@ -8,7 +8,7 @@ class Buttons
 {
 	
 	public var entities:Array<Entity>;
-	var buttons:Array<Entity>;
+	var buttons:Array<Button>;
 	
 	public function new ()
 	{
@@ -16,7 +16,7 @@ class Buttons
 		buttons = [];
 		
 		var sx = 250;
-		var sy = Game.HEIGHT - 100;
+		var sy = Game.HEIGHT - 118;
 		
 		for (i in 0...5)
 		{
@@ -38,14 +38,29 @@ class Buttons
 	{
 		for (b in buttons) {
 			b.frame = 2;
+			b.icon.roy = 0;
 		}
 	}
 	
 	public function select (bi:Int)
 	{
 		for (i in 0...buttons.length) {
-			if (i == bi)	buttons[i].frame = 3;
-			else			buttons[i].frame = 1;
+			if (i == bi) {
+				buttons[i].frame = 3;
+				buttons[i].icon.roy = 5;
+			}
+			else {
+				buttons[i].frame = 1;
+				buttons[i].icon.roy = 5;
+			}
+		}
+	}
+	
+	public function reset ()
+	{
+		for (b in buttons) {
+			b.frame = 0;
+			b.icon.roy = 0;
 		}
 	}
 	
