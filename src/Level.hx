@@ -22,6 +22,8 @@ class Level
 	static public var NORMAL_SPREAD:Int = 32;
 	static public var LARGE_SPREAD:Int = 128;
 	
+	public var entities:Array<Entity>;
+	
 	var enemySoldiersMax:Int;
 	var playerSoldiersMax:Int;
 	
@@ -35,7 +37,8 @@ class Level
 	var playerKing:King;
 	var playerSoldiers:Array<Soldier>;
 	
-	public var entities:Array<Entity>;
+	var flagLeft:Flag;
+	var flagRight:Flag;
 	
 	var state:LevelState;
 	var stateTick:Int;
@@ -208,13 +211,13 @@ class Level
 			e.update();
 		}
 		// Clean up dead level entities
-		entities = entities.filter(Game.INST.filterDead);
 		enemySoldiers = enemySoldiers.filter(Game.INST.filterDead);
 		playerSoldiers = playerSoldiers.filter(Game.INST.filterDead);
+		entities = entities.filter(Game.INST.filterDead);
 		// Z-sort
-		entities.sort(zSort);
 		enemySoldiers.sort(zSort);
 		playerSoldiers.sort(zSort);
+		entities.sort(zSort);
 	}
 	
 	function zSort (a:Entity, b:Entity)
@@ -234,6 +237,7 @@ class Level
 				
 			case PROPAGATING:
 				state = RESOLVING;
+				// Resolve
 				resolve();
 				
 			case RESOLVING:
@@ -246,10 +250,13 @@ class Level
 				// Store last action
 				lastPlayerAction = playerAction;
 				lastEnemyAction = enemyAction.action;
+				// Hide flags
+				if (flagLeft != null)	flagLeft.isDead = true;
+				if (flagRight != null)	flagRight.isDead = true;
 				
 			case DONE:
 				state = CHOOSING_FLAGS;
-				stateTick = 60;
+				stateTick = 120;
 				chooseAction();
 				
 			default:
@@ -261,8 +268,21 @@ class Level
 	
 	function chooseAction ()
 	{
-		// Choose a random action and its correspondidsng flags
+		// Choose a random action and its corresponding flags
 		enemyAction = Actions.pickRandomAction();
+		
+		if (flagLeft != null)	entities.remove(flagLeft);
+		flagLeft = new Flag(enemyAction.flags[0].variant);
+		flagLeft.x = enemyKing.x - flagLeft.w * 0.9 + 30;
+		flagLeft.y = enemyKing.y - flagLeft.zOffset;
+		entities.push(flagLeft);
+		
+		if (flagRight != null)	entities.remove(flagRight);
+		flagRight = new Flag(enemyAction.flags[1].variant);
+		flagRight.x = enemyKing.x + 30;
+		flagRight.y = enemyKing.y - flagRight.zOffset;
+		entities.push(flagRight);
+		
 		playerAction = ActionType.IDLE;
 	}
 	

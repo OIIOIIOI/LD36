@@ -39,7 +39,7 @@ class Arrow extends Entity
 		
 		if (gravity != 0 && speedY > speedYmax) {
 			speedX = speedY = gravity = 0;
-			Timer.delay(kill, 2000);
+			Timer.delay(kill, 1500);
 		}
 	}
 	

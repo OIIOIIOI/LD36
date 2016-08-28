@@ -70,16 +70,16 @@ class Sprites
 		sprites.set(RUN + RIGHT,		flipAnim(RUN + LEFT));
 		sprites.set(KING + RIGHT,		flipAnim(KING + LEFT));
 		// Flags
-		sprites.set(FLAG_A + RIGHT,	{ data:Assets.getBitmapData("img/flag_a.png"), frames:2, delay:8 });
-		sprites.set(FLAG_B + RIGHT,	{ data:Assets.getBitmapData("img/flag_b.png"), frames:2, delay:8 });
-		sprites.set(FLAG_C + RIGHT,	{ data:Assets.getBitmapData("img/flag_c.png"), frames:2, delay:8 });
-		sprites.set(FLAG_D + RIGHT,	{ data:Assets.getBitmapData("img/flag_d.png"), frames:2, delay:8 });
-		sprites.set(FLAG_E + RIGHT,	{ data:Assets.getBitmapData("img/flag_e.png"), frames:2, delay:8 });
-		sprites.set(FLAG_F + RIGHT,	{ data:Assets.getBitmapData("img/flag_f.png"), frames:2, delay:8 });
-		sprites.set(FLAG_G + RIGHT,	{ data:Assets.getBitmapData("img/flag_g.png"), frames:2, delay:8 });
-		sprites.set(FLAG_H + RIGHT,	{ data:Assets.getBitmapData("img/flag_h.png"), frames:2, delay:8 });
-		sprites.set(FLAG_I + RIGHT,	{ data:Assets.getBitmapData("img/flag_i.png"), frames:2, delay:8 });
-		sprites.set(FLAG_J + RIGHT,	{ data:Assets.getBitmapData("img/flag_j.png"), frames:2, delay:8 });
+		sprites.set(FLAG_A + RIGHT,	{ data:Assets.getBitmapData("img/flag_a.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_B + RIGHT,	{ data:Assets.getBitmapData("img/flag_b.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_C + RIGHT,	{ data:Assets.getBitmapData("img/flag_c.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_D + RIGHT,	{ data:Assets.getBitmapData("img/flag_d.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_E + RIGHT,	{ data:Assets.getBitmapData("img/flag_e.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_F + RIGHT,	{ data:Assets.getBitmapData("img/flag_f.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_G + RIGHT,	{ data:Assets.getBitmapData("img/flag_g.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_H + RIGHT,	{ data:Assets.getBitmapData("img/flag_h.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_I + RIGHT,	{ data:Assets.getBitmapData("img/flag_i.png"), frames:2, delay:Std.random(10)+30 });
+		sprites.set(FLAG_J + RIGHT,	{ data:Assets.getBitmapData("img/flag_j.png"), frames:2, delay:Std.random(10)+30 });
 		// Flags flipped
 		sprites.set(FLAG_A + LEFT,	flipAnim(FLAG_A + RIGHT));
 		sprites.set(FLAG_B + LEFT,	flipAnim(FLAG_B + RIGHT));

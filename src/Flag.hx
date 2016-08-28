@@ -6,11 +6,14 @@ package;
  */
 class Flag extends Entity
 {
+	
+	public var zOffset:Int;
 
-	public function new ()
+	public function new (id:String)
 	{
 		super();
-		setAnim(Sprites.FLAG_C_LEFT);
+		zOffset = roy = -800;
+		setAnim(id);
 	}
 	
 }
