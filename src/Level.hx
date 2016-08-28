@@ -56,6 +56,8 @@ class Level extends Screen
 	var gameIsOver:Bool;
 	
 	var buttons:Buttons;
+	
+	var propagTime:Int;
 
 	public function new (stage:Int)
 	{
@@ -75,9 +77,24 @@ class Level extends Screen
 		Actions.pairActionAndFlags();
 		
 		// Set max soldiers
-		playerSoldiersMax = 7;
-		enemySoldiersMax =  switch (stage) {
+		playerSoldiersMax = switch (stage)
+		{
+			case 0:		7;
+			case 1:		6;
+			case 2:		5;
+			case 3:		4;
+			default:	3;
+		}
+		enemySoldiersMax = switch (stage)
+		{
 			default:	5;
+		}
+		propagTime = switch (stage)
+		{
+			case 0:		60;
+			case 1:		50;
+			case 2:		40;
+			default:	30;
 		}
 		
 		// Set starting state
@@ -379,11 +396,7 @@ class Level extends Screen
 		var i = 0;
 		for (s in enemySoldiers)
 		{
-			var t = (Std.random(2) * 2 - 1) * Std.random(15);
-			if (enemySoldiers.length > 3)	t += 60;
-			else							t += 45;
-			
-			tick += t;
+			tick += propagTime;
 			s.think(tick);
 			var emote = new Emote(Sprites.EMOTE_THINK);
 			emote.x = s.x;
@@ -721,6 +734,9 @@ class Level extends Screen
 		{
 			gameIsOver = true;
 			state = (forPlayer) ? LevelState.DEFEAT : LevelState.VICTORY;
+			
+			if (forPlayer)	Game.INST.stageDifficulty = 0;
+			else			Game.INST.stageDifficulty++;
 			
 			var bannerText = new BannerText(!forPlayer);
 			entities.push(bannerText);
