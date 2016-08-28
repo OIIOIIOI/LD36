@@ -30,6 +30,10 @@ class Game extends Sprite
 	var entities:Array<Entity>;
 	//var particles:Array<Particle>;
 	
+	var shakeAmount:Int = 3;
+	var shakeTick:Int;
+	var shakeMode:ShakeMode;
+	
 	public var level:Level;
 
 	public function new () 
@@ -86,6 +90,21 @@ class Game extends Sprite
 		
 		// Render
 		render();
+		
+		// Screen shake
+		if (shakeTick > 0)
+		{
+			if (shakeMode == ShakeMode.HORIZONTAL || shakeMode == ShakeMode.OMNI)
+				canvas.x = shakeAmount * Std.random(2) * 2 - 1;
+			if (shakeMode == ShakeMode.VERTICAL || shakeMode == ShakeMode.OMNI)
+				canvas.y = shakeAmount * Std.random(2) * 2 - 1;
+			shakeTick--;
+		}
+		else if (shakeTick == 0)
+		{
+			canvas.x = canvas.y = 0;
+			shakeTick--;
+		}
 	}
 	
 	public function filterDead (e:Entity) :Bool
@@ -111,4 +130,26 @@ class Game extends Sprite
 		}
 	}
 	
+	public function shake (amount:Int, duration:Int, mode:ShakeMode = null)
+	{
+		if (mode == null)
+			mode = ShakeMode.OMNI;
+		// Apply screen shake if none is taking place currently
+		// or if new one is at least as strong
+		// or if new one is fixed
+		if (shakeTick == -1 || amount >= shakeAmount || mode == ShakeMode.OMNI)
+		{
+			shakeAmount = amount;
+			shakeTick = duration;
+			shakeMode = mode;
+		}
+	}
+	
+}
+
+enum ShakeMode
+{
+	HORIZONTAL;
+	VERTICAL;
+	OMNI;
 }

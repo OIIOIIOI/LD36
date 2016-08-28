@@ -11,6 +11,9 @@ class Emote extends Entity
 	{
 		super();
 		setAnim(id);
+		
+		rox = Std.int(w * 0.9);
+		roy = Std.int(-h * 0.6);
 	}
 	
 }

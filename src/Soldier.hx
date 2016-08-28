@@ -67,6 +67,10 @@ class Soldier extends Entity
 			}
 		}
 		
+		// Dead emote
+		if (emote != null && emote.isDead)
+			emote = null;
+		
 		// Thinking
 		if (thinkTick > 0) {
 			thinkTick--;
@@ -74,6 +78,11 @@ class Soldier extends Entity
 				isThinking = false;
 				if (emote != null)	emote.setAnim(Sprites.EMOTE_READY);
 			}
+		}
+		
+		if (emote != null) {
+			emote.x = x;
+			emote.y = y;
 		}
 	}
 	
@@ -99,6 +108,17 @@ class Soldier extends Entity
 	{
 		thinkTick = t;
 		isThinking = true;
+	}
+	
+	public function sleep (sleep:Bool = true)
+	{
+		if (sleep && (emote == null || emote.spriteID != Sprites.EMOTE_REST)) {
+			emote = new Emote(Sprites.EMOTE_REST);
+			emote.x = x;
+			emote.y = y;
+			Game.INST.level.emotes.push(emote);
+		}
+		// TODO CHECK AND REMOVE WHEN FALSE
 	}
 	
 	public function moveTo (tx:Float, ty:Float, idleOnArrival = false)

@@ -1,5 +1,7 @@
 package;
 
+import Game;
+
 /**
  * ...
  * @author 01101101
@@ -8,7 +10,7 @@ class Tower extends Entity
 {
 	
 	var isPlayer:Bool;
-	var health:Int;
+	public var health:Int;
 
 	public function new (isPlayer:Bool)
 	{
@@ -39,6 +41,7 @@ class Tower extends Entity
 	{
 		health--;
 		updateAnim();
+		Game.INST.shake(5, 45, ShakeMode.OMNI);
 	}
 	
 }
