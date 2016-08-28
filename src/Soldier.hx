@@ -74,8 +74,10 @@ class Soldier extends Entity
 		}
 	}
 	
-	override public function setAnim(id:String, randomStart:Bool = false, keepState:Bool = false) 
+	override public function setAnim (id:String, randomStart:Bool = false, keepState:Bool = false)
 	{
+		speed = (id == Sprites.ATK_FRONT || id == Sprites.RUN) ? 5 : 2;
+		
 		var dir = (isPlayer) ? -1 : 1;
 		if (isComingBack)	dir = -dir;
 		
