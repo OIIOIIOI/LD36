@@ -17,25 +17,27 @@ class Soldier extends Entity
 	var targetX:Float;
 	var targetY:Float;
 	var speed:Float = 5;
+
+	public var isComingBack:Bool;
 	
 	public function new (isPlayer:Bool) 
 	{
 		super();
 		
-		setAnim(Sprites.DEF_FRONT);
-		
 		this.isPlayer = isPlayer;
 		health = 1;
 		
+		setAnim(Sprites.IDLE);
+		
 		thinkTick = -1;
 		isThinking = false;
+		
+		isComingBack = false;
 		
 		x = 0;
 		y = Game.HEIGHT / 2 - cy;
 		if (isPlayer)	x = Game.WIDTH - w;
 		moveTo(x, y);
-		//x = y = 0;
-		//if (isPlayer)	x = Game.WIDTH - 32;
 	}
 	
 	override public function update() 
@@ -62,10 +64,18 @@ class Soldier extends Entity
 			thinkTick--;
 			if (thinkTick <= 0) {
 				isThinking = false;
-				setAnim(Sprites.DEF_FRONT);
-				//moveTo(x + (Std.random(2) * 2 - 1) * Std.random(10), y + (Std.random(2) * 2 - 1) * Std.random(20));
 			}
 		}
+	}
+	
+	override public function setAnim(id:String, randomStart:Bool = false, keepState:Bool = false) 
+	{
+		var dir = (isPlayer) ? -1 : 1;
+		if (isComingBack)	dir = -dir;
+		
+		id += (dir == 1) ? Sprites.LEFT : Sprites.RIGHT;
+		
+		super.setAnim(id, randomStart, keepState);
 	}
 	
 	public function hurt ()
@@ -78,7 +88,6 @@ class Soldier extends Entity
 	{
 		thinkTick = t;
 		isThinking = true;
-		setAnim(Sprites.ATK_FRONT);
 	}
 	
 	public function moveTo (tx:Float, ty:Float)

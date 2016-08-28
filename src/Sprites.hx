@@ -2,6 +2,7 @@ package;
 import flash.geom.Matrix;
 import openfl.Assets;
 import openfl.display.BitmapData;
+import openfl.geom.Rectangle;
 
 /**
  * ...
@@ -10,28 +11,25 @@ import openfl.display.BitmapData;
 class Sprites
 {
 	
+	static public var RIGHT:String = "_right";
+	static public var LEFT:String = "_left";
+	
 	static public var BATTLEFIELD:String = "battlefield";
-	static public var TOWER_LEFT:String = "tower_left";
-	static public var TOWER_RIGHT:String = "tower_right";
+	static public var TOWER:String = "tower";
 	
 	static public var IDLE:String = "idle";
-	static public var SLEEP:String = "sleep";
 	static public var ATK_FRONT:String = "atk_front";
 	static public var ATK_UP:String = "atk_up";
 	static public var DEF_FRONT:String = "def_front";
 	static public var DEF_UP:String = "def_up";
 	
-	static public var FLAG_A_RIGHT:String = "flag_a_right";
-	static public var FLAG_B_RIGHT:String = "flag_b_right";
-	static public var FLAG_C_RIGHT:String = "flag_c_right";
-	static public var FLAG_D_RIGHT:String = "flag_d_right";
-	static public var FLAG_E_RIGHT:String = "flag_e_right";
+	static public var FLAG_A:String = "flag_a";
+	static public var FLAG_B:String = "flag_b";
+	static public var FLAG_C:String = "flag_c";
+	static public var FLAG_D:String = "flag_d";
+	static public var FLAG_E:String = "flag_e";
 	
-	static public var FLAG_A_LEFT:String = "flag_a_left";
-	static public var FLAG_B_LEFT:String = "flag_b_left";
-	static public var FLAG_C_LEFT:String = "flag_c_left";
-	static public var FLAG_D_LEFT:String = "flag_d_left";
-	static public var FLAG_E_LEFT:String = "flag_e_left";
+	static public var ARROW:String = "arrow";
 	
 	static var sprites:Map<String, SpriteSheet>;
 
@@ -43,27 +41,35 @@ class Sprites
 		// Background
 		sprites.set(BATTLEFIELD, { data:Assets.getBitmapData("img/battle_field.png"), frames:1, delay:8 });
 		// Tower
-		sprites.set(TOWER_LEFT, { data:Assets.getBitmapData("img/tower.png"), frames:1, delay:8 });
-		sprites.set(TOWER_RIGHT, { data:Sprites.flipBitmapData(Assets.getBitmapData("img/tower.png")), frames:1, delay:8 });
+		sprites.set(TOWER + LEFT,	{ data:Assets.getBitmapData("img/tower.png"), frames:1, delay:8 });
+		sprites.set(TOWER + RIGHT,	flipAnim(TOWER + LEFT));
 		// Soldiers
-		sprites.set(IDLE, { data:Assets.getBitmapData("img/idle.png"), frames:1, delay:8 });
-		sprites.set(SLEEP, { data:Assets.getBitmapData("img/sleep.png"), frames:1, delay:8 });
-		sprites.set(ATK_FRONT, { data:Assets.getBitmapData("img/atk_front.png"), frames:1, delay:8 });
-		sprites.set(ATK_UP, { data:Assets.getBitmapData("img/atk_up.png"), frames:1, delay:8 });
-		sprites.set(DEF_FRONT, { data:Assets.getBitmapData("img/def_front.png"), frames:1, delay:8 });
-		sprites.set(DEF_UP, { data:Assets.getBitmapData("img/def_up.png"), frames:1, delay:8 });
+		sprites.set(IDLE + LEFT,		{ data:Assets.getBitmapData("img/idle.png"), frames:4, delay:8 });
+		sprites.set(ATK_FRONT + LEFT,	{ data:Assets.getBitmapData("img/atk_front.png"), frames:7, delay:8 });
+		sprites.set(ATK_UP + LEFT,		{ data:Assets.getBitmapData("img/atk_up.png"), frames:4, delay:8 });
+		sprites.set(DEF_FRONT + LEFT,	{ data:Assets.getBitmapData("img/def_front.png"), frames:4, delay:8 });
+		sprites.set(DEF_UP + LEFT,		{ data:Assets.getBitmapData("img/def_up.png"), frames:4, delay:8 });
+		// Soldiers flipped
+		sprites.set(IDLE + RIGHT,		flipAnim(IDLE + LEFT));
+		sprites.set(ATK_FRONT + RIGHT,	flipAnim(ATK_FRONT + LEFT));
+		sprites.set(ATK_UP + RIGHT,		flipAnim(ATK_UP + LEFT));
+		sprites.set(DEF_FRONT + RIGHT,	flipAnim(DEF_FRONT + LEFT));
+		sprites.set(DEF_UP + RIGHT,		flipAnim(DEF_UP + LEFT));
 		// Flags
-		sprites.set(FLAG_A_RIGHT, { data:Assets.getBitmapData("img/flag_a.png"), frames:2, delay:8 });
-		sprites.set(FLAG_B_RIGHT, { data:Assets.getBitmapData("img/flag_b.png"), frames:2, delay:8 });
-		sprites.set(FLAG_C_RIGHT, { data:Assets.getBitmapData("img/flag_c.png"), frames:2, delay:8 });
-		sprites.set(FLAG_D_RIGHT, { data:Assets.getBitmapData("img/flag_d.png"), frames:2, delay:8 });
-		sprites.set(FLAG_E_RIGHT, { data:Assets.getBitmapData("img/flag_e.png"), frames:2, delay:8 });
+		sprites.set(FLAG_A + RIGHT,	{ data:Assets.getBitmapData("img/flag_a.png"), frames:1, delay:8 });
+		sprites.set(FLAG_B + RIGHT,	{ data:Assets.getBitmapData("img/flag_b.png"), frames:2, delay:8 });
+		sprites.set(FLAG_C + RIGHT,	{ data:Assets.getBitmapData("img/flag_c.png"), frames:2, delay:8 });
+		sprites.set(FLAG_D + RIGHT,	{ data:Assets.getBitmapData("img/flag_d.png"), frames:2, delay:8 });
+		sprites.set(FLAG_E + RIGHT,	{ data:Assets.getBitmapData("img/flag_e.png"), frames:2, delay:8 });
 		// Flags flipped
-		sprites.set(FLAG_A_LEFT, { data:Sprites.flipBitmapData(Assets.getBitmapData("img/flag_a.png")), frames:2, delay:8 });
-		sprites.set(FLAG_B_LEFT, { data:Sprites.flipBitmapData(Assets.getBitmapData("img/flag_b.png")), frames:2, delay:8 });
-		sprites.set(FLAG_C_LEFT, { data:Sprites.flipBitmapData(Assets.getBitmapData("img/flag_c.png")), frames:2, delay:8 });
-		sprites.set(FLAG_D_LEFT, { data:Sprites.flipBitmapData(Assets.getBitmapData("img/flag_d.png")), frames:2, delay:8 });
-		sprites.set(FLAG_E_LEFT, { data:Sprites.flipBitmapData(Assets.getBitmapData("img/flag_e.png")), frames:2, delay:8 });
+		sprites.set(FLAG_A + LEFT,	flipAnim(FLAG_A + RIGHT));
+		sprites.set(FLAG_B + LEFT,	flipAnim(FLAG_B + RIGHT));
+		sprites.set(FLAG_C + LEFT,	flipAnim(FLAG_C + RIGHT));
+		sprites.set(FLAG_D + LEFT,	flipAnim(FLAG_D + RIGHT));
+		sprites.set(FLAG_E + LEFT,	flipAnim(FLAG_E + RIGHT));
+		// Arrows
+		sprites.set(ARROW + LEFT,	{ data:Assets.getBitmapData("img/arrow.png"), frames:10, delay:8 });
+		sprites.set(ARROW + RIGHT,	flipAnim(ARROW + LEFT));
 	}
 	
 	static public function getSheet (id:String) :SpriteSheet
@@ -90,6 +96,34 @@ class Sprites
 		Game.TAP.y = Math.round(y);
 		
 		c.copyPixels(data, Game.TAR, Game.TAP);
+	}
+	
+	static public function flipAnim (id:String) :SpriteSheet
+	{
+		var sheet = getSheet(id);
+		// If sheet does not exist
+		if (sheet == null)
+			return null;
+		// If single frame, no need to reverse animation
+		if (sheet.frames == 1)
+			return { data:flipBitmapData(sheet.data), frames:sheet.frames, delay:sheet.delay };
+		// Reverse animation
+		var flipped = new BitmapData(sheet.data.width, sheet.data.height, true, 0x00FF00FF);
+		var w = Std.int(sheet.data.width / sheet.frames);
+		Game.TAR.x = 0;
+		Game.TAR.y = 0;
+		Game.TAR.width = w;
+		Game.TAR.height = sheet.data.height;
+		Game.TAP.x = 0;
+		Game.TAP.y = 0;
+		for (i in 0...sheet.frames)
+		{
+			Game.TAR.x = i * w;
+			Game.TAP.x = sheet.data.width - (i + 1) * w;
+			flipped.copyPixels(sheet.data, Game.TAR, Game.TAP);
+		}
+		// Flip sheet
+		return { data:flipBitmapData(flipped), frames:sheet.frames, delay:sheet.delay };
 	}
 	
 	static public function flipBitmapData (bd:BitmapData) :BitmapData

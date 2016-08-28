@@ -1,5 +1,6 @@
 package;
 
+import flash.display.Bitmap;
 import openfl.display.Sprite;
 import openfl.Lib;
 

@@ -14,9 +14,16 @@ class King extends Entity
 		super();
 		
 		this.isPlayer = isPlayer;
-		setAnim(Sprites.ATK_UP);
+		
+		setAnim(Sprites.IDLE);
 		
 		rox = (Std.random(2) * 2 - 1) * 8;
+	}
+	
+	override public function setAnim(id:String, randomStart:Bool = false, keepState:Bool = false) 
+	{
+		id += (isPlayer) ? Sprites.RIGHT : Sprites.LEFT;
+		super.setAnim(id, randomStart, keepState);
 	}
 	
 }

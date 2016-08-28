@@ -14,12 +14,11 @@ class Actions
 	static public function pairActionAndFlags ()
 	{
 		actions = [];
-		actions.push({ action:ATTACK_FRONT, flags:Flags.pickFlagPairs() });
-		actions.push({ action:ATTACK_UP, flags:Flags.pickFlagPairs() });
-		actions.push({ action:DEFEND_FRONT, flags:Flags.pickFlagPairs() });
-		actions.push({ action:DEFEND_UP, flags:Flags.pickFlagPairs() });
-		actions.push({ action:SLEEP, flags:Flags.pickFlagPairs() });
-		//trace(actions);
+		actions.push({ action:ActionType.ATTACK_FRONT,	flags:Flags.pickFlagPairs() });
+		actions.push({ action:ActionType.ATTACK_UP,		flags:Flags.pickFlagPairs() });
+		actions.push({ action:ActionType.DEFEND_FRONT,	flags:Flags.pickFlagPairs() });
+		actions.push({ action:ActionType.DEFEND_UP,		flags:Flags.pickFlagPairs() });
+		actions.push({ action:ActionType.REST,			flags:Flags.pickFlagPairs() });
 	}
 	
 	static public function pickRandomAction () :Action
@@ -39,6 +38,6 @@ enum ActionType {
 	ATTACK_UP;
 	DEFEND_FRONT;
 	DEFEND_UP;
-	SLEEP;
+	REST;
 	IDLE;
 }
