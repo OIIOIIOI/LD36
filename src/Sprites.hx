@@ -89,7 +89,7 @@ class Sprites
 		sprites.set(FLAG_I + LEFT,	flipAnim(FLAG_I + RIGHT));
 		sprites.set(FLAG_J + LEFT,	flipAnim(FLAG_J + RIGHT));
 		// Arrows
-		sprites.set(ARROW + LEFT,	{ data:Assets.getBitmapData("img/arrow.png"), frames:10, delay:8 });
+		sprites.set(ARROW + LEFT,	{ data:Assets.getBitmapData("img/arrow.png"), frames:10, delay:9999 });
 		sprites.set(ARROW + RIGHT,	flipAnim(ARROW + LEFT));
 	}
 	

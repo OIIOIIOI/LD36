@@ -41,7 +41,10 @@ class Level
 	var stateTick:Int;
 	
 	var enemyAction:Action;
+	var lastEnemyAction:ActionType;
+	
 	var playerAction:ActionType;
+	var lastPlayerAction:ActionType;
 
 	public function new (stage:Int)
 	{
@@ -156,7 +159,11 @@ class Level
 		{
 			// Wait for soldiers to stop moving
 			if (stateTick <= 0 && !soldiersAreMoving())
+			{
+				if (playerAction == ActionType.ATTACK_UP)		fireArrows(true);
+				if (enemyAction.action == ActionType.ATTACK_UP)	fireArrows(false);
 				stateTick = 60;
+			}
 		}
 		else if (state == LevelState.DONE)
 		{
@@ -230,8 +237,14 @@ class Level
 				
 			case RESOLVING:
 				state = DONE;
-				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.RUN, true, true);
-				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.RUN, true, true);
+				// Send soldiers back to the tower
+				if (playerAction == ActionType.ATTACK_FRONT)
+					moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.RUN, true, true);
+				if (enemyAction.action == ActionType.ATTACK_FRONT)
+					moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.RUN, true, true);
+				// Store last action
+				lastPlayerAction = playerAction;
+				lastEnemyAction = enemyAction.action;
 				
 			case DONE:
 				state = CHOOSING_FLAGS;
@@ -286,7 +299,8 @@ class Level
 			case ActionType.REST:
 				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 			case ActionType.IDLE:
-				//moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
+				if (lastEnemyAction != ActionType.IDLE)
+					moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 		}
 		
 		// Move player soldiers
@@ -294,7 +308,7 @@ class Level
 		{
 			case ActionType.ATTACK_FRONT:
 				if (enemyAction.action == ActionType.ATTACK_FRONT)	moveSoldiers(true, MIDDLE_LINE, NORMAL_SPREAD, Sprites.ATK_FRONT);
-				else if (enemyAction.action == ActionType.REST)	moveSoldiers(true, ENEMY_TOWER_LINE, NORMAL_SPREAD, Sprites.ATK_FRONT);
+				else if (enemyAction.action == ActionType.REST)		moveSoldiers(true, ENEMY_TOWER_LINE, NORMAL_SPREAD, Sprites.ATK_FRONT);
 				else												moveSoldiers(true, ENEMY_FRONT_LINE, NORMAL_SPREAD, Sprites.ATK_FRONT);
 			case ActionType.ATTACK_UP:
 				moveSoldiers(true, PLAYER_FRONT_LINE, NORMAL_SPREAD, Sprites.ATK_UP);
@@ -305,7 +319,8 @@ class Level
 			case ActionType.REST:
 				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 			case ActionType.IDLE:
-				//moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
+				if (lastPlayerAction != ActionType.IDLE)
+					moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 		}
 		
 		// RESOLVE ALL CASES
@@ -321,7 +336,12 @@ class Level
 					//killRandomSoldier(true);
 					
 				// Player loses a soldier
-				case ActionType.ATTACK_UP, ActionType.DEFEND_UP, ActionType.IDLE:
+				case ActionType.ATTACK_UP:
+					trace("Player loses a soldier");
+					//killRandomSoldier(true);
+					
+				// Player loses a soldier
+				case ActionType.DEFEND_UP, ActionType.IDLE:
 					trace("Player loses a soldier");
 					//killRandomSoldier(true);
 					
@@ -401,7 +421,11 @@ class Level
 					//killRandomSoldier(false);
 					
 				// Nothing happens
-				case ActionType.ATTACK_UP, ActionType.DEFEND_FRONT, ActionType.DEFEND_UP, ActionType.IDLE:
+				case ActionType.ATTACK_UP:
+					trace("Nothing happens");
+					
+				// Nothing happens
+				case ActionType.DEFEND_FRONT, ActionType.DEFEND_UP, ActionType.IDLE:
 					trace("Nothing happens");
 					
 				// Player regains a soldier

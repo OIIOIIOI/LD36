@@ -24,7 +24,7 @@ class Actions
 	static public function pickRandomAction () :Action
 	{
 		return actions[Std.random(actions.length)];
-		//return actions[4];
+		//return actions[1];
 	}
 	
 }
