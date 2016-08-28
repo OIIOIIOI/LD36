@@ -17,7 +17,10 @@ class Sprites
 	static public var UI_WOOD:String = "ui_wood";
 	
 	static public var BATTLEFIELD:String = "battlefield";
-	static public var TOWER:String = "tower";
+	
+	static public var TOWER_A:String = "tower_a";
+	static public var TOWER_B:String = "tower_b";
+	static public var TOWER_C:String = "tower_c";
 	
 	static public var IDLE:String = "idle";
 	static public var ATK_FRONT:String = "atk_front";
@@ -40,6 +43,10 @@ class Sprites
 	
 	static public var ARROW:String = "arrow";
 	
+	static public var EMOTE_THINK:String = "emote_think";
+	static public var EMOTE_READY:String = "emote_ready";
+	static public var EMOTE_REST:String = "emote_rest";
+	
 	static var sprites:Map<String, SpriteSheet>;
 	
 	static public function init ()
@@ -51,8 +58,12 @@ class Sprites
 		sprites.set(UI_WOOD, { data:Assets.getBitmapData("img/ui_wood.png"), frames:1, delay:8 });
 		sprites.set(BATTLEFIELD, { data:Assets.getBitmapData("img/battle_field.png"), frames:1, delay:8 });
 		// Tower
-		sprites.set(TOWER + LEFT,	{ data:Assets.getBitmapData("img/tower.png"), frames:1, delay:8 });
-		sprites.set(TOWER + RIGHT,	flipAnim(TOWER + LEFT));
+		sprites.set(TOWER_A + LEFT,	{ data:Assets.getBitmapData("img/tower_1.png"), frames:1, delay:8 });
+		sprites.set(TOWER_A + RIGHT,	flipAnim(TOWER_A + LEFT));
+		sprites.set(TOWER_B + LEFT,	{ data:Assets.getBitmapData("img/tower_2.png"), frames:1, delay:8 });
+		sprites.set(TOWER_B + RIGHT,	flipAnim(TOWER_B + LEFT));
+		sprites.set(TOWER_C + LEFT,	{ data:Assets.getBitmapData("img/tower_3.png"), frames:1, delay:8 });
+		sprites.set(TOWER_C + RIGHT,	flipAnim(TOWER_C + LEFT));
 		// Soldiers
 		sprites.set(IDLE + LEFT,		{ data:Assets.getBitmapData("img/idle.png"), frames:4, delay:12 });
 		sprites.set(ATK_FRONT + LEFT,	{ data:Assets.getBitmapData("img/atk_front.png"), frames:7, delay:5 });
@@ -94,6 +105,10 @@ class Sprites
 		// Arrows
 		sprites.set(ARROW + LEFT,	{ data:Assets.getBitmapData("img/arrow.png"), frames:10, delay:9999 });
 		sprites.set(ARROW + RIGHT,	flipAnim(ARROW + LEFT));
+		// Emotes
+		sprites.set(EMOTE_READY,	{ data:Assets.getBitmapData("img/icon_ready.png"), frames:4, delay:8 });
+		sprites.set(EMOTE_REST,		{ data:Assets.getBitmapData("img/icon_sleep.png"), frames:4, delay:8 });
+		sprites.set(EMOTE_THINK,	{ data:Assets.getBitmapData("img/icon_think.png"), frames:4, delay:8 });
 	}
 	
 	static public function getSheet (id:String) :SpriteSheet

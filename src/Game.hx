@@ -79,6 +79,10 @@ class Game extends Sprite
 		for (e in level.entities) {
 			e.postUpdate();
 		}
+		// Post update level entities
+		for (e in level.emotes) {
+			e.postUpdate();
+		}
 		
 		// Render
 		render();
@@ -96,6 +100,10 @@ class Game extends Sprite
 		//canvasData.fillRect(canvasData.rect, 0xFF1CEC96);
 		// Render level entities
 		for (e in level.entities) {
+			Sprites.draw(canvasData, e.spriteID, e.x + e.rox, e.y + e.roy, e.frame);
+		}
+		// Render level emotes
+		for (e in level.emotes) {
 			Sprites.draw(canvasData, e.spriteID, e.x + e.rox, e.y + e.roy, e.frame);
 		}
 		// Render entities

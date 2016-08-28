@@ -21,6 +21,8 @@ class Soldier extends Entity
 	public var isComingBack:Bool;
 	var idleOnArrival:Bool;
 	
+	public var emote:Emote;
+	
 	public function new (isPlayer:Bool) 
 	{
 		super();
@@ -70,6 +72,7 @@ class Soldier extends Entity
 			thinkTick--;
 			if (thinkTick <= 0) {
 				isThinking = false;
+				if (emote != null)	emote.setAnim(Sprites.EMOTE_READY);
 			}
 		}
 	}

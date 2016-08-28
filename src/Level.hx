@@ -23,6 +23,7 @@ class Level
 	static public var LARGE_SPREAD:Int = 128;
 	
 	public var entities:Array<Entity>;
+	public var emotes:Array<Entity>;
 	
 	var enemySoldiersMax:Int;
 	var playerSoldiersMax:Int;
@@ -72,7 +73,9 @@ class Level
 		state = CREATING;
 		stateTick = 0;
 		
+		// Init lists
 		entities = [];
+		emotes = [];
 		
 		// Spawn battlefield
 		entities.push(new Battlefield());
@@ -182,7 +185,7 @@ class Level
 					s.isComingBack = Std.random(2) == 0;
 					s.setAnim(Sprites.IDLE);
 				}
-				stateTick = 60;
+				stateTick = 120;
 			}
 		}
 		else if (state == LevelState.CREATING)
@@ -201,10 +204,10 @@ class Level
 			}
 		}
 		
-		enemyKing.x = enemyTower.x + enemyTower.cx - 8;
-		enemyKing.y = enemyTower.y + enemyTower.roy - enemyKing.cy - 10;
-		playerKing.x = playerTower.x + playerTower.cx - playerKing.w + 8;
-		playerKing.y = playerTower.y + playerTower.roy - playerKing.cy - 10;
+		enemyKing.x = enemyTower.x + enemyTower.cx - 27;
+		enemyKing.y = enemyTower.y + enemyTower.roy - enemyKing.cy - 15;
+		playerKing.x = playerTower.x + playerTower.cx - playerKing.w + 27;
+		playerKing.y = playerTower.y + playerTower.roy - playerKing.cy - 15;
 		
 		// Update level entities
 		for (e in entities) {
@@ -214,6 +217,11 @@ class Level
 		enemySoldiers = enemySoldiers.filter(Game.INST.filterDead);
 		playerSoldiers = playerSoldiers.filter(Game.INST.filterDead);
 		entities = entities.filter(Game.INST.filterDead);
+		// Update emotes
+		for (e in emotes) {
+			e.update();
+		}
+		emotes = emotes.filter(Game.INST.filterDead);
 		// Z-sort
 		enemySoldiers.sort(zSort);
 		playerSoldiers.sort(zSort);
@@ -256,12 +264,12 @@ class Level
 				
 			case DONE:
 				state = CHOOSING_FLAGS;
-				stateTick = 120;
+				stateTick = 10;
 				chooseAction();
 				
 			default:
 				state = DONE;
-				stateTick = 60;
+				stateTick = 120;
 		}
 		trace("changed state to "+state);
 	}
@@ -292,9 +300,14 @@ class Level
 		var i = 0;
 		for (s in enemySoldiers)
 		{
-			var t = 25 + (Std.random(2) * 2 - 1) * Std.random(15);
+			var t = 60 + (Std.random(2) * 2 - 1) * Std.random(15);
 			tick += t;
 			s.think(tick);
+			var emote = new Emote(Sprites.EMOTE_THINK);
+			emote.x = s.x;
+			emote.y = s.y;
+			emotes.push(emote);
+			s.emote = emote;
 		}
 		return tick;
 	}
@@ -303,6 +316,10 @@ class Level
 	{
 		trace(enemyAction.action + " vs " + playerAction);
 		trace("----");
+		
+		for (e in emotes) {
+			e.isDead = true;
+		}
 		
 		// Move enemy soldiers
 		switch (enemyAction.action)
@@ -575,6 +592,7 @@ enum LevelState {
 	CREATING;
 	CHOOSING_FLAGS;
 	PROPAGATING;
+	//MOVING;
 	RESOLVING;
 	DONE;
 }
