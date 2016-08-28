@@ -44,7 +44,7 @@ class Soldier extends Entity
 		moveTo(x, y);
 	}
 	
-	override public function update() 
+	override public function update ()
 	{
 		super.update();
 		
@@ -116,9 +116,11 @@ class Soldier extends Entity
 			emote = new Emote(Sprites.EMOTE_REST);
 			emote.x = x;
 			emote.y = y;
-			Game.INST.level.emotes.push(emote);
+			if (Std.is(Game.INST.currentScreen, Level)) {
+				var level:Level = cast Game.INST.currentScreen;
+				level.emotes.push(emote);
+			}
 		}
-		// TODO CHECK AND REMOVE WHEN FALSE
 	}
 	
 	public function moveTo (tx:Float, ty:Float, idleOnArrival = false)

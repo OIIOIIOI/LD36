@@ -3,13 +3,14 @@ package;
 import Actions;
 import Game;
 import haxe.Timer;
+import openfl.display.BitmapData;
 import openfl.ui.Keyboard;
 
 /**
  * ...
  * @author 01101101
  */
-class Level
+class Level extends Screen
 {
 	
 	static public var ENEMY_TOWER_LINE:Int;
@@ -22,7 +23,6 @@ class Level
 	static public var NORMAL_SPREAD:Int = 32;
 	static public var LARGE_SPREAD:Int = 128;
 	
-	public var entities:Array<Entity>;
 	public var emotes:Array<Entity>;
 	
 	public var enemySoldiersMax:Int;
@@ -55,6 +55,8 @@ class Level
 
 	public function new (stage:Int)
 	{
+		super();
+		
 		this.stage = stage;
 		
 		ENEMY_TOWER_LINE = 65;
@@ -77,7 +79,6 @@ class Level
 		stateTick = 0;
 		
 		// Init lists
-		entities = [];
 		emotes = [];
 		
 		// Spawn battlefield
@@ -143,7 +144,7 @@ class Level
 		}
 	}
 	
-	public function update ()
+	override public function update ()
 	{
 		if (stateTick > 0) {
 			stateTick--;
@@ -236,27 +237,41 @@ class Level
 		if (playerTower.health == 2)			playerKing.y += 45;
 		else if (playerTower.health == 1)	playerKing.y += 130;
 		
-		// Update level entities
-		for (e in entities) {
-			e.update();
-		}
-		// Clean up dead level entities
-		enemySoldiers = enemySoldiers.filter(Game.INST.filterDead);
-		playerSoldiers = playerSoldiers.filter(Game.INST.filterDead);
-		entities = entities.filter(Game.INST.filterDead);
-		// Update emotes
+		// Update
+		super.update();
 		for (e in emotes) {
 			e.update();
 		}
-		emotes = emotes.filter(Game.INST.filterDead);
-		// Z-sort
-		enemySoldiers.sort(zSort);
-		playerSoldiers.sort(zSort);
-		entities.sort(zSort);
 		
 		// Update UI
 		enemySoldiersUI.activate(enemySoldiers.length);
 		playerSoldiersUI.activate(playerSoldiers.length);
+	}
+	
+	override public function filterDead ()
+	{
+		super.filterDead();
+		enemySoldiers = enemySoldiers.filter(Game.INST.filterDead);
+		playerSoldiers = playerSoldiers.filter(Game.INST.filterDead);
+		emotes = emotes.filter(Game.INST.filterDead);
+	}
+	
+	override public function postUpdate ()
+	{
+		super.postUpdate();
+		for (e in emotes) {
+			e.postUpdate();
+		}
+		// Z-sort
+		enemySoldiers.sort(zSort);
+		playerSoldiers.sort(zSort);
+		entities.sort(zSort);
+	}
+	
+	override public function render (canvasData:BitmapData)
+	{
+		super.render(canvasData);
+		renderArray(emotes, canvasData);
 	}
 	
 	function zSort (a:Entity, b:Entity)
@@ -563,8 +578,8 @@ class Level
 		entities.push(new Blood(s.x, s.y));
 		entities.push(new SoldierDie(forPlayer, s.x, s.y));
 		// Shake
-		if (fromAbove)	Game.INST.shake(6, 10, ShakeMode.VERTICAL);
-		else			Game.INST.shake(6, 10, ShakeMode.HORIZONTAL);
+		if (fromAbove)	Game.INST.shake(8, 15, ShakeMode.VERTICAL);
+		else			Game.INST.shake(8, 15, ShakeMode.HORIZONTAL);
 	}
 	
 	function spawnNewSoldier (forPlayer:Bool, tx:Int, ty:Int)

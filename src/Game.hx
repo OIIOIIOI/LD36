@@ -26,15 +26,14 @@ class Game extends Sprite
 
 	var canvas:Bitmap;
 	var canvasData:BitmapData;
-
-	var entities:Array<Entity>;
-	//var particles:Array<Particle>;
 	
 	var shakeAmount:Int = 3;
 	var shakeTick:Int;
 	var shakeMode:ShakeMode;
 	
-	public var level:Level;
+	public var currentScreen:Screen;
+	
+	//public var level:Level;
 
 	public function new () 
 	{
@@ -58,38 +57,22 @@ class Game extends Sprite
 	
 	function reset ()
 	{
-		entities = [];
-		
-		level = new Level(0);
+		//currentScreen = new TitleScreen();
+		currentScreen = new Level(0);
 	}
 	
 	function update (e:Event)
 	{
-		// Update level
-		level.update();
-		
-		// Update other entities
-		for (e in entities) {
-			e.update();
+		if (currentScreen != null)
+		{
+			// Update level
+			currentScreen.update();
+			currentScreen.filterDead();
+			currentScreen.postUpdate();
+			
+			// Render
+			currentScreen.render(canvasData);
 		}
-		// Clean up dead entities
-		entities = entities.filter(filterDead);
-		
-		// Post update entities
-		for (e in entities) {
-			e.postUpdate();
-		}
-		// Post update level entities
-		for (e in level.entities) {
-			e.postUpdate();
-		}
-		// Post update level entities
-		for (e in level.emotes) {
-			e.postUpdate();
-		}
-		
-		// Render
-		render();
 		
 		// Screen shake
 		if (shakeTick > 0)
@@ -112,31 +95,22 @@ class Game extends Sprite
 		return !e.isDead;
 	}
 	
-	function render ()
+	/*function render ()
 	{
-		// Render all graphics
+		// Clear canvas
 		canvasData.fillRect(canvasData.rect, 0xFF808080);
-		// Render level entities
-		for (e in level.entities) {
-			Sprites.draw(canvasData, e.spriteID, e.x + e.rox, e.y + e.roy, e.frame);
-		}
-		// Render level emotes
-		for (e in level.emotes) {
-			Sprites.draw(canvasData, e.spriteID, e.x + e.rox, e.y + e.roy, e.frame);
-		}
+		// Return if nothing to draw
+		if (currentScreen == null)	return;
 		// Render entities
-		for (e in entities) {
+		for (e in currentScreen.entities) {
 			Sprites.draw(canvasData, e.spriteID, e.x + e.rox, e.y + e.roy, e.frame);
 		}
-	}
+	}*/
 	
 	public function shake (amount:Int, duration:Int, mode:ShakeMode = null)
 	{
-		if (mode == null)
-			mode = ShakeMode.OMNI;
-		// Apply screen shake if none is taking place currently
-		// or if new one is at least as strong
-		// or if new one is fixed
+		if (mode == null) mode = ShakeMode.OMNI;
+		
 		if (shakeTick == -1 || amount >= shakeAmount || mode == ShakeMode.OMNI)
 		{
 			shakeAmount = amount;

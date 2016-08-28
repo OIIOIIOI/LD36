@@ -24,9 +24,14 @@ class Actions
 	static public function pickRandomAction () :Action
 	{
 		var length = actions.length;
-		if (Game.INST.level.enemySoldiers.length >= Game.INST.level.enemySoldiersMax)	length--;
-		//return actions[Std.random(length)];
-		return actions[4];
+		if (Std.is(Game.INST.currentScreen, Level))
+		{
+			var level:Level = cast Game.INST.currentScreen;
+			if (level.enemySoldiers.length >= level.enemySoldiersMax)
+				length--;
+		}
+		return actions[Std.random(length)];
+		//return actions[4];
 	}
 	
 }
