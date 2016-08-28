@@ -1,7 +1,7 @@
 package;
 
-
 import Actions;
+import Game;
 import haxe.Timer;
 import openfl.ui.Keyboard;
 
@@ -25,14 +25,14 @@ class Level
 	public var entities:Array<Entity>;
 	public var emotes:Array<Entity>;
 	
-	var enemySoldiersMax:Int;
+	public var enemySoldiersMax:Int;
 	var playerSoldiersMax:Int;
 	
 	var stage:Int;
 	
 	var enemyTower:Tower;
 	var enemyKing:King;
-	var enemySoldiers:Array<Soldier>;
+	public var enemySoldiers:Array<Soldier>;
 	
 	var playerTower:Tower;
 	var playerKing:King;
@@ -165,17 +165,23 @@ class Level
 			else if (Controls.isDown(Keyboard.SPACE))
 				playerAction = ActionType.REST;
 			// Update UI
-			if (playerAction != ActionType.IDLE)
-				trace("new action chosen: " + playerAction);
+			//if (playerAction != ActionType.IDLE)
+				//trace("new action chosen: " + playerAction);
 		}
 		else if (state == LevelState.MOVING)
 		{
 			// Wait for soldiers to stop moving
 			if (stateTick <= 0 && !soldiersAreMoving())
 			{
+				// Fire arrows
 				if (playerAction == ActionType.ATTACK_UP)		fireArrows(true);
 				if (enemyAction.action == ActionType.ATTACK_UP)	fireArrows(false);
-				Timer.delay(resolveLanceKills, 250);
+				// Resolve lance kills
+				Timer.delay(resolveLanceKills, 100);
+				// Hide flags
+				if (flagLeft != null)	flagLeft.isDead = true;
+				if (flagRight != null)	flagRight.isDead = true;
+				// Wait
 				stateTick = 60;
 			}
 		}
@@ -222,8 +228,13 @@ class Level
 		
 		enemyKing.x = enemyTower.x + enemyTower.cx - 27;
 		enemyKing.y = enemyTower.y + enemyTower.roy - enemyKing.cy - 15;
+		if (enemyTower.health == 2)			enemyKing.y += 45;
+		else if (enemyTower.health == 1)	enemyKing.y += 130;
+		
 		playerKing.x = playerTower.x + playerTower.cx - playerKing.w + 27;
 		playerKing.y = playerTower.y + playerTower.roy - playerKing.cy - 15;
+		if (playerTower.health == 2)			playerKing.y += 45;
+		else if (playerTower.health == 1)	playerKing.y += 130;
 		
 		// Update level entities
 		for (e in entities) {
@@ -272,9 +283,6 @@ class Level
 				state = LevelState.RESOLVING;
 				// Resolve
 				resolve();
-				// Hide flags
-				if (flagLeft != null)	flagLeft.isDead = true;
-				if (flagRight != null)	flagRight.isDead = true;
 				
 			case LevelState.RESOLVING:
 				state = LevelState.DONE;
@@ -296,7 +304,7 @@ class Level
 				state = LevelState.DONE;
 				stateTick = 120;
 		}
-		trace(Date.now().getTime() + ": changed state to "+state);
+		trace(Date.now().getTime() + ": changed state to " + state);
 	}
 	
 	function chooseAction ()
@@ -361,7 +369,8 @@ class Level
 			case ActionType.DEFEND_FRONT:
 				moveSoldiers(false, ENEMY_FRONT_LINE, NARROW_SPREAD, Sprites.DEF_FRONT);
 			case ActionType.REST:
-				moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
+				//moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
+				for (s in enemySoldiers)	s.sleep();
 			case ActionType.IDLE:
 				if (lastEnemyAction != ActionType.IDLE)
 					moveSoldiers(false, ENEMY_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
@@ -381,7 +390,8 @@ class Level
 			case ActionType.DEFEND_FRONT:
 				moveSoldiers(true, PLAYER_FRONT_LINE, NARROW_SPREAD, Sprites.DEF_FRONT);
 			case ActionType.REST:
-				moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
+				//moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
+				for (s in playerSoldiers)	s.sleep();
 			case ActionType.IDLE:
 				if (lastPlayerAction != ActionType.IDLE)
 					moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
@@ -398,8 +408,8 @@ class Level
 		if (playerAction == ActionType.ATTACK_FRONT &&
 			enemyAction.action == ActionType.ATTACK_FRONT)
 		{
-			killRandomSoldier(false);
-			killRandomSoldier(true);
+			killRandomSoldier(false, false);
+			killRandomSoldier(true, false);
 		}
 		// If player lance attack
 		else if (playerAction == ActionType.ATTACK_FRONT &&
@@ -407,7 +417,13 @@ class Level
 				enemyAction.action == ActionType.DEFEND_UP ||
 				enemyAction.action == ActionType.ATTACK_UP))
 		{
-			killRandomSoldier(false);
+			killRandomSoldier(false, false);
+		}
+		// If player lance attack against tower
+		else if (playerAction == ActionType.ATTACK_FRONT &&
+				enemyAction.action == ActionType.REST)
+		{
+			hurtTower(false);
 		}
 		// If enemy lance attack
 		else if (enemyAction.action == ActionType.ATTACK_FRONT &&
@@ -415,14 +431,22 @@ class Level
 				playerAction == ActionType.DEFEND_UP ||
 				playerAction == ActionType.ATTACK_UP))
 		{
-			killRandomSoldier(true);
+			killRandomSoldier(true, false);
+		}
+		// If enemy lance attack against tower
+		else if (enemyAction.action == ActionType.ATTACK_FRONT &&
+				playerAction == ActionType.REST)
+		{
+			hurtTower(true);
 		}
 	}
 	
 	function resolve ()
 	{
-		trace(enemyAction.action + " vs " + playerAction);
-		trace("----");
+		// Hide emotes
+		for (e in emotes) {
+			e.isDead = true;
+		}
 		
 		// ATTACK_FRONT vs ATTACK_FRONT or ATTACK_UP or DEFEND_UP or IDLE -> resolved by resolveLanceKills
 		// ATTACK_FRONT vs DEFEND_FRONT -> nothing happens
@@ -430,8 +454,7 @@ class Level
 		if (enemyAction.action == ActionType.ATTACK_FRONT &&
 			playerAction == ActionType.REST)
 		{
-			trace("Player tower is hurt - player regains a soldier");
-			// TODO hurt player tower
+			// Player regains a soldier
 			var p = getSpawnSpot(true);
 			spawnNewSoldier(true, p[0], p[1]);
 		}
@@ -442,24 +465,24 @@ class Level
 		if (enemyAction.action == ActionType.ATTACK_UP &&
 			playerAction == ActionType.ATTACK_UP)
 		{
-			trace("Both lose a soldier");
-			killRandomSoldier(false);
-			killRandomSoldier(true);
+			// Both lose a soldier
+			killRandomSoldier(false, true);
+			killRandomSoldier(true, true);
 		}
 		// ATTACK_UP vs DEFEND_FRONT or IDLE
 		else if (enemyAction.action == ActionType.ATTACK_UP &&
 				(playerAction == ActionType.DEFEND_FRONT ||
 				playerAction == ActionType.IDLE))
 		{
-			trace("Player loses a soldier");
-			killRandomSoldier(true);
+			// Player loses a soldier
+			killRandomSoldier(true, true);
 		}
 		// ATTACK_UP vs REST
 		else if (enemyAction.action == ActionType.ATTACK_UP &&
 				playerAction == ActionType.REST)
 		{
-			trace("Player loses a soldier - player regains a soldier");
-			killRandomSoldier(true);
+			// Player loses a soldier - player regains a soldier
+			killRandomSoldier(true, true);
 			var p = getSpawnSpot(true);
 			spawnNewSoldier(true, p[0], p[1]);
 		}
@@ -469,14 +492,14 @@ class Level
 		if (enemyAction.action == ActionType.DEFEND_FRONT &&
 			playerAction == ActionType.ATTACK_UP)
 		{
-			trace("Enemy loses a soldier");
-			killRandomSoldier(false);
+			// Enemy loses a soldier
+			killRandomSoldier(false, true);
 		}
 		// DEFEND_FRONT vs REST
 		else if (enemyAction.action == ActionType.DEFEND_FRONT &&
 				playerAction == ActionType.REST)
 		{
-			trace("Player regains a soldier");
+			// Player regains a soldier
 			var p = getSpawnSpot(true);
 			spawnNewSoldier(true, p[0], p[1]);
 		}
@@ -487,7 +510,7 @@ class Level
 		if (enemyAction.action == ActionType.DEFEND_UP &&
 			playerAction == ActionType.REST)
 		{
-			trace("Player regains a soldier");
+			// Player regains a soldier
 			var p = getSpawnSpot(true);
 			spawnNewSoldier(true, p[0], p[1]);
 		}
@@ -496,8 +519,7 @@ class Level
 		if (enemyAction.action == ActionType.REST &&
 			playerAction == ActionType.ATTACK_FRONT)
 		{
-			trace("Enemy tower is hurt - enemy regains a soldier");
-			// TODO hurt enemy tower
+			// Enemy regains a soldier
 			var p = getSpawnSpot(false);
 			spawnNewSoldier(false, p[0], p[1]);
 		}
@@ -505,8 +527,8 @@ class Level
 		else if (enemyAction.action == ActionType.REST &&
 				playerAction == ActionType.ATTACK_UP)
 		{
-			trace("Enemy loses a soldier - enemy regains a soldier");
-			killRandomSoldier(false);
+			// Enemy loses a soldier - enemy regains a soldier
+			killRandomSoldier(false, true);
 			var p = getSpawnSpot(false);
 			spawnNewSoldier(false, p[0], p[1]);
 		}
@@ -516,7 +538,7 @@ class Level
 				playerAction == ActionType.DEFEND_UP ||
 				playerAction == ActionType.IDLE))
 		{
-			trace("Enemy regains a soldier");
+			// Enemy regains a soldier
 			var p = getSpawnSpot(false);
 			spawnNewSoldier(false, p[0], p[1]);
 		}
@@ -524,7 +546,7 @@ class Level
 		else if (enemyAction.action == ActionType.REST &&
 				playerAction == ActionType.REST)
 		{
-			trace("Both regain a soldier");
+			// Both regain a soldier
 			var p = getSpawnSpot(true);
 			spawnNewSoldier(true, p[0], p[1]);
 			p = getSpawnSpot(false);
@@ -532,7 +554,7 @@ class Level
 		}
 	}
 	
-	function killRandomSoldier (forPlayer:Bool)
+	function killRandomSoldier (forPlayer:Bool, fromAbove:Bool = true)
 	{
 		var s = null;
 		if (forPlayer)	s = playerSoldiers[Std.random(playerSoldiers.length)];
@@ -540,6 +562,9 @@ class Level
 		s.hurt();
 		entities.push(new Blood(s.x, s.y));
 		entities.push(new SoldierDie(forPlayer, s.x, s.y));
+		// Shake
+		if (fromAbove)	Game.INST.shake(6, 10, ShakeMode.VERTICAL);
+		else			Game.INST.shake(6, 10, ShakeMode.HORIZONTAL);
 	}
 	
 	function spawnNewSoldier (forPlayer:Bool, tx:Int, ty:Int)
@@ -638,6 +663,14 @@ class Level
 			arrow.y = s.y;
 			entities.push(arrow);
 		}
+	}
+	
+	function hurtTower (forPlayer:Bool)
+	{
+		var tower = (forPlayer) ? playerTower : enemyTower;
+		var king = (forPlayer) ? playerKing : enemyKing;
+		
+		tower.hurt();
 	}
 	
 }
