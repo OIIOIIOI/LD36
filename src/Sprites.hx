@@ -15,8 +15,9 @@ class Sprites
 	static public var LEFT:String = "_left";
 	
 	static public var UI_WOOD:String = "ui_wood";
-	
 	static public var BATTLEFIELD:String = "battlefield";
+	static public var PARCHMENT:String = "parchment";
+	static public var UI_SOLDIER_BAR:String = "ui_soldier_bar";
 	
 	static public var TOWER_A:String = "tower_a";
 	static public var TOWER_B:String = "tower_b";
@@ -29,6 +30,7 @@ class Sprites
 	static public var DEF_UP:String = "def_up";
 	static public var RUN:String = "run";
 	static public var KING:String = "king";
+	static public var DIE:String = "die";
 	
 	static public var FLAG_A:String = "flag_a";
 	static public var FLAG_B:String = "flag_b";
@@ -47,6 +49,8 @@ class Sprites
 	static public var EMOTE_READY:String = "emote_ready";
 	static public var EMOTE_REST:String = "emote_rest";
 	
+	static public var BLOOD:String = "blood";
+	
 	static var sprites:Map<String, SpriteSheet>;
 	
 	static public function init ()
@@ -57,6 +61,9 @@ class Sprites
 		// UI and background
 		sprites.set(UI_WOOD, { data:Assets.getBitmapData("img/ui_wood.png"), frames:1, delay:8 });
 		sprites.set(BATTLEFIELD, { data:Assets.getBitmapData("img/battle_field.png"), frames:1, delay:8 });
+		sprites.set(PARCHMENT + LEFT, { data:Assets.getBitmapData("img/parchment.png"), frames:1, delay:8 });
+		sprites.set(PARCHMENT + RIGHT, flipAnim(PARCHMENT + LEFT));
+		sprites.set(UI_SOLDIER_BAR, { data:Assets.getBitmapData("img/ui_bar_soldier.png"), frames:2, delay:9999 });
 		// Tower
 		sprites.set(TOWER_A + LEFT,	{ data:Assets.getBitmapData("img/tower_1.png"), frames:1, delay:8 });
 		sprites.set(TOWER_A + RIGHT,	flipAnim(TOWER_A + LEFT));
@@ -70,8 +77,9 @@ class Sprites
 		sprites.set(ATK_UP + LEFT,		{ data:Assets.getBitmapData("img/atk_up.png"), frames:4, delay:8 });
 		sprites.set(DEF_FRONT + LEFT,	{ data:Assets.getBitmapData("img/def_front.png"), frames:4, delay:12 });
 		sprites.set(DEF_UP + LEFT,		{ data:Assets.getBitmapData("img/def_up.png"), frames:4, delay:12 });
-		sprites.set(RUN + LEFT	,		{ data:Assets.getBitmapData("img/run.png"), frames:7, delay:5 });
-		sprites.set(KING + LEFT	,		{ data:Assets.getBitmapData("img/king.png"), frames:4, delay:12 });
+		sprites.set(RUN + LEFT,			{ data:Assets.getBitmapData("img/run.png"), frames:7, delay:5 });
+		sprites.set(KING + LEFT,		{ data:Assets.getBitmapData("img/king.png"), frames:4, delay:12 });
+		sprites.set(DIE + LEFT,			{ data:Assets.getBitmapData("img/soldier_die.png"), frames:24, delay:4 });
 		// Soldiers flipped
 		sprites.set(IDLE + RIGHT,		flipAnim(IDLE + LEFT));
 		sprites.set(ATK_FRONT + RIGHT,	flipAnim(ATK_FRONT + LEFT));
@@ -80,6 +88,7 @@ class Sprites
 		sprites.set(DEF_UP + RIGHT,		flipAnim(DEF_UP + LEFT));
 		sprites.set(RUN + RIGHT,		flipAnim(RUN + LEFT));
 		sprites.set(KING + RIGHT,		flipAnim(KING + LEFT));
+		sprites.set(DIE + RIGHT,		flipAnim(DIE + LEFT));
 		// Flags
 		sprites.set(FLAG_A + RIGHT,	{ data:Assets.getBitmapData("img/flag_a.png"), frames:2, delay:Std.random(10)+30 });
 		sprites.set(FLAG_B + RIGHT,	{ data:Assets.getBitmapData("img/flag_b.png"), frames:2, delay:Std.random(10)+30 });
@@ -109,6 +118,8 @@ class Sprites
 		sprites.set(EMOTE_READY,	{ data:Assets.getBitmapData("img/icon_ready.png"), frames:4, delay:8 });
 		sprites.set(EMOTE_REST,		{ data:Assets.getBitmapData("img/icon_sleep.png"), frames:4, delay:8 });
 		sprites.set(EMOTE_THINK,	{ data:Assets.getBitmapData("img/icon_think.png"), frames:4, delay:8 });
+		// FX
+		sprites.set(BLOOD,	{ data:Assets.getBitmapData("img/blood_floor.png"), frames:8, delay:8 });
 	}
 	
 	static public function getSheet (id:String) :SpriteSheet

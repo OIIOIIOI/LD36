@@ -12,8 +12,8 @@ class Battlefield extends Entity
 		super();
 		setAnim(Sprites.BATTLEFIELD);
 		
-		y = Std.int(-h / 2);
-		roy = Std.int(h / 2);
+		y = -Game.HEIGHT * 2;
+		roy = Game.HEIGHT * 2;
 	}
 	
 }

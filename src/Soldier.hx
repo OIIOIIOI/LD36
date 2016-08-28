@@ -23,7 +23,7 @@ class Soldier extends Entity
 	
 	public var emote:Emote;
 	
-	public function new (isPlayer:Bool) 
+	public function new (isPlayer:Bool)
 	{
 		super();
 		

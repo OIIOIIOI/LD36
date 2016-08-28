@@ -49,6 +49,9 @@ class Level
 	
 	var playerAction:ActionType;
 	var lastPlayerAction:ActionType;
+	
+	var enemySoldiersUI:UISoldiers;
+	var playerSoldiersUI:UISoldiers;
 
 	public function new (stage:Int)
 	{
@@ -70,7 +73,7 @@ class Level
 		}
 		
 		// Set starting state
-		state = CREATING;
+		state = LevelState.CREATING;
 		stateTick = 0;
 		
 		// Init lists
@@ -79,7 +82,16 @@ class Level
 		
 		// Spawn battlefield
 		entities.push(new Battlefield());
+		// Spawn UI
 		entities.push(new UIWood());
+		entities.push(new Parchment(false));
+		entities.push(new Parchment(true));
+		// Player soldiers UI
+		enemySoldiersUI = new UISoldiers(enemySoldiersMax, 0);
+		for (e in enemySoldiersUI.entities)	entities.push(e);
+		// Player soldiers UI
+		playerSoldiersUI = new UISoldiers(playerSoldiersMax, Game.WIDTH - 190);
+		for (e in playerSoldiersUI.entities)	entities.push(e);
 		
 		// Spawn enemy tower and king
 		enemyTower = new Tower(false);
@@ -145,7 +157,7 @@ class Level
 				nextState();
 		}
 		
-		if (state == LevelState.PROPAGATING && playerAction == IDLE)
+		if (state == LevelState.PROPAGATING && playerAction == ActionType.IDLE)
 		{
 			// Check controls
 			if (Controls.isDown(Keyboard.LEFT))
@@ -159,16 +171,27 @@ class Level
 			else if (Controls.isDown(Keyboard.SPACE))
 				playerAction = ActionType.REST;
 			// Update UI
-			if (playerAction != IDLE)
+			if (playerAction != ActionType.IDLE)
 				trace("new action chosen: " + playerAction);
 		}
-		else if (state == LevelState.RESOLVING)
+		else if (state == LevelState.MOVING)
 		{
 			// Wait for soldiers to stop moving
 			if (stateTick <= 0 && !soldiersAreMoving())
 			{
 				if (playerAction == ActionType.ATTACK_UP)		fireArrows(true);
 				if (enemyAction.action == ActionType.ATTACK_UP)	fireArrows(false);
+				Timer.delay(resolveLanceKills, 250);
+				stateTick = 60;
+			}
+		}
+		else if (state == LevelState.RESOLVING)
+		{
+			// Wait for soldiers to stop moving
+			if (stateTick <= 0 && !soldiersAreMoving())
+			{
+				//if (playerAction == ActionType.ATTACK_UP)		fireArrows(true);
+				//if (enemyAction.action == ActionType.ATTACK_UP)	fireArrows(false);
 				stateTick = 60;
 			}
 		}
@@ -226,6 +249,10 @@ class Level
 		enemySoldiers.sort(zSort);
 		playerSoldiers.sort(zSort);
 		entities.sort(zSort);
+		
+		// Update UI
+		enemySoldiersUI.activate(enemySoldiers.length);
+		playerSoldiersUI.activate(playerSoldiers.length);
 	}
 	
 	function zSort (a:Entity, b:Entity)
@@ -239,17 +266,25 @@ class Level
 	{
 		switch (state)
 		{
-			case CHOOSING_FLAGS:
-				state = PROPAGATING;
+			case LevelState.CHOOSING_FLAGS:
+				state = LevelState.PROPAGATING;
 				stateTick = propagate();
 				
-			case PROPAGATING:
-				state = RESOLVING;
+			case LevelState.PROPAGATING:
+				state = LevelState.MOVING;
+				// Move soldiers
+				move();
+				
+			case LevelState.MOVING:
+				state = LevelState.RESOLVING;
 				// Resolve
 				resolve();
+				// Hide flags
+				if (flagLeft != null)	flagLeft.isDead = true;
+				if (flagRight != null)	flagRight.isDead = true;
 				
-			case RESOLVING:
-				state = DONE;
+			case LevelState.RESOLVING:
+				state = LevelState.DONE;
 				// Send soldiers back to the tower
 				if (playerAction == ActionType.ATTACK_FRONT)
 					moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.RUN, true, true);
@@ -258,20 +293,17 @@ class Level
 				// Store last action
 				lastPlayerAction = playerAction;
 				lastEnemyAction = enemyAction.action;
-				// Hide flags
-				if (flagLeft != null)	flagLeft.isDead = true;
-				if (flagRight != null)	flagRight.isDead = true;
 				
-			case DONE:
-				state = CHOOSING_FLAGS;
+			case LevelState.DONE:
+				state = LevelState.CHOOSING_FLAGS;
 				stateTick = 10;
 				chooseAction();
 				
 			default:
-				state = DONE;
+				state = LevelState.DONE;
 				stateTick = 120;
 		}
-		trace("changed state to "+state);
+		trace(Date.now().getTime() + ": changed state to "+state);
 	}
 	
 	function chooseAction ()
@@ -312,11 +344,9 @@ class Level
 		return tick;
 	}
 	
-	function resolve ()
+	function move ()
 	{
-		trace(enemyAction.action + " vs " + playerAction);
-		trace("----");
-		
+		// Hide emotes
 		for (e in emotes) {
 			e.isDead = true;
 		}
@@ -360,6 +390,43 @@ class Level
 				if (lastPlayerAction != ActionType.IDLE)
 					moveSoldiers(true, PLAYER_FRONT_LINE, LARGE_SPREAD, Sprites.IDLE);
 		}
+	}
+	
+	function resolveLanceKills ()
+	{
+		// Return if no lance attacks
+		if (playerAction != ActionType.ATTACK_FRONT && enemyAction.action != ActionType.ATTACK_FRONT)
+			return;
+		
+		// If both lance attacks
+		if (playerAction == ActionType.ATTACK_FRONT &&
+			enemyAction.action == ActionType.ATTACK_FRONT)
+		{
+			killRandomSoldier(false);
+			killRandomSoldier(true);
+		}
+		// If player lance attack
+		else if (playerAction == ActionType.ATTACK_FRONT &&
+				(enemyAction.action == ActionType.IDLE ||
+				enemyAction.action == ActionType.DEFEND_UP ||
+				enemyAction.action == ActionType.ATTACK_UP))
+		{
+			killRandomSoldier(false);
+		}
+		// If enemy lance attack
+		else if (enemyAction.action == ActionType.ATTACK_FRONT &&
+				(playerAction == ActionType.IDLE ||
+				playerAction == ActionType.DEFEND_UP ||
+				playerAction == ActionType.ATTACK_UP))
+		{
+			killRandomSoldier(true);
+		}
+	}
+	
+	function resolve ()
+	{
+		trace(enemyAction.action + " vs " + playerAction);
+		trace("----");
 		
 		// RESOLVE ALL CASES
 		// Enemy attack from the front
@@ -369,19 +436,15 @@ class Level
 			{
 				// Both lose a soldier
 				case ActionType.ATTACK_FRONT:
-					trace("Both lose a soldier");
-					//killRandomSoldier(false);
-					//killRandomSoldier(true);
+					//trace("Both lose a soldier");
 					
 				// Player loses a soldier
 				case ActionType.ATTACK_UP:
-					trace("Player loses a soldier");
-					//killRandomSoldier(true);
+					//trace("Player loses a soldier");
 					
 				// Player loses a soldier
 				case ActionType.DEFEND_UP, ActionType.IDLE:
-					trace("Player loses a soldier");
-					//killRandomSoldier(true);
+					//trace("Player loses a soldier");
 					
 				// Player defends successfully - nothing happens
 				case ActionType.DEFEND_FRONT:
@@ -400,19 +463,18 @@ class Level
 			{
 				// Enemy loses a soldier
 				case ActionType.ATTACK_FRONT:
-					trace("Enemy loses a soldier");
-					//killRandomSoldier(false);
+					//trace("Enemy loses a soldier");
 					
 				// Both lose a soldier
 				case ActionType.ATTACK_UP:
 					trace("Both lose a soldier");
-					//killRandomSoldier(false);
-					//killRandomSoldier(true);
+					killRandomSoldier(false);
+					killRandomSoldier(true);
 					
 				// Player loses a soldier
 				case ActionType.DEFEND_FRONT, ActionType.IDLE:
 					trace("Player loses a soldier");
-					//killRandomSoldier(true);
+					killRandomSoldier(true);
 					
 				// Player defends successfully - nothing happens
 				case ActionType.DEFEND_UP:
@@ -432,7 +494,7 @@ class Level
 				// Enemy loses a soldier
 				case ActionType.ATTACK_UP:
 					trace("Enemy loses a soldier");
-					//killRandomSoldier(false);
+					killRandomSoldier(false);
 					
 				// Enemy defends successfully - nothing happens
 				case ActionType.ATTACK_FRONT:
@@ -455,8 +517,7 @@ class Level
 			{
 				// Enemy loses a soldier
 				case ActionType.ATTACK_FRONT:
-					trace("Enemy loses a soldier");
-					//killRandomSoldier(false);
+					//trace("Enemy loses a soldier");
 					
 				// Nothing happens
 				case ActionType.ATTACK_UP:
@@ -507,6 +568,8 @@ class Level
 		if (forPlayer)	s = playerSoldiers[Std.random(playerSoldiers.length)];
 		else			s = enemySoldiers[Std.random(enemySoldiers.length)];
 		s.hurt();
+		entities.push(new Blood(s.x, s.y));
+		entities.push(new SoldierDie(forPlayer, s.x, s.y));
 	}
 	
 	function spawnNewSoldier (forPlayer:Bool, tx:Int, ty:Int)
@@ -592,7 +655,7 @@ enum LevelState {
 	CREATING;
 	CHOOSING_FLAGS;
 	PROPAGATING;
-	//MOVING;
+	MOVING;
 	RESOLVING;
 	DONE;
 }
