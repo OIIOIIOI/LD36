@@ -13,6 +13,8 @@ class Sprites
 	
 	static public var RIGHT:String = "_right";
 	static public var LEFT:String = "_left";
+
+	static public var BLANK:String = "";
 	
 	static public var UI_WOOD:String = "ui_wood";
 	static public var BATTLEFIELD:String = "battlefield";
@@ -22,8 +24,13 @@ class Sprites
 	static public var BANNER_VICTORY:String = "banner_victory";
 	static public var BUTTON:String = "button";
 	static public var BUTTON_ICON:String = "button_icon";
-	static public var ENEMY_ACTIONS_TEXT:String = "enemy_actions_text";
-	static public var ENEMY_ACTIONS_LOADING:String = "enemy_actions_loading";
+	static public var TEXT_ARCHERS:String = "text_archers";
+	static public var TEXT_CHARGE:String = "text_charge";
+	static public var TEXT_DEFEND:String = "text_defend";
+	static public var TEXT_LOADING:String = "text_loading";
+	static public var TEXT_REST:String = "text_rest";
+	static public var TEXT_SHIELD_UP:String = "text_shield_up";
+	static public var TEXT_YOUR_TURN:String = "text_your_turn";
 	
 	static public var TOWER_A:String = "tower_a";
 	static public var TOWER_B:String = "tower_b";
@@ -75,6 +82,7 @@ class Sprites
 		sprites = new Map();
 		
 		// Store all assets and animation infos
+		sprites.set(BLANK, { data:new BitmapData(8, 8, true, 0x00FFFFFF), frames:1, delay:8 });
 		// UI and background
 		sprites.set(UI_WOOD, { data:Assets.getBitmapData("img/ui_wood.png"), frames:1, delay:8 });
 		sprites.set(BATTLEFIELD, { data:Assets.getBitmapData("img/battle_field.png"), frames:1, delay:8 });
@@ -85,8 +93,13 @@ class Sprites
 		sprites.set(BANNER_VICTORY, { data:Assets.getBitmapData("img/popup_victory.png"), frames:1, delay:8 });
 		sprites.set(BUTTON, { data:Assets.getBitmapData("img/btn_action.png"), frames:4, delay:8 });
 		sprites.set(BUTTON_ICON, { data:Assets.getBitmapData("img/btn_icon.png"), frames:5, delay:8 });
-		sprites.set(ENEMY_ACTIONS_TEXT, { data:Assets.getBitmapData("img/text_actions.png"), frames:5, delay:8 });
-		sprites.set(ENEMY_ACTIONS_LOADING, { data:Assets.getBitmapData("img/actions_loading.png"), frames:4, delay:8 });
+		sprites.set(TEXT_ARCHERS, { data:Assets.getBitmapData("img/text_archers.png"), frames:1, delay:8 });
+		sprites.set(TEXT_CHARGE, { data:Assets.getBitmapData("img/text_charge.png"), frames:1, delay:8 });
+		sprites.set(TEXT_DEFEND, { data:Assets.getBitmapData("img/text_defend.png"), frames:1, delay:8 });
+		sprites.set(TEXT_LOADING, { data:Assets.getBitmapData("img/text_loading.png"), frames:4, delay:12 });
+		sprites.set(TEXT_REST, { data:Assets.getBitmapData("img/text_rest.png"), frames:1, delay:8 });
+		sprites.set(TEXT_SHIELD_UP, { data:Assets.getBitmapData("img/text_shield_up.png"), frames:1, delay:8 });
+		sprites.set(TEXT_YOUR_TURN, { data:Assets.getBitmapData("img/text_your_turn.png"), frames:1, delay:8 });
 		// Tower
 		sprites.set(TOWER_A + LEFT,	{ data:Assets.getBitmapData("img/tower_1.png"), frames:1, delay:8 });
 		sprites.set(TOWER_A + RIGHT,	flipAnim(TOWER_A + LEFT));

@@ -57,7 +57,8 @@ class Level extends Screen
 	var gameIsOver:Bool;
 	
 	var buttons:Buttons;
-	// var actionsText:EnemyActionsText;
+	var enemyActionText:ActionText;
+	var playerActionText:ActionText;
 	
 	var propagTime:Int;
 
@@ -119,7 +120,11 @@ class Level extends Screen
 		playerSoldiersUI = new UISoldiers(playerSoldiersMax, Game.WIDTH - 190);
 		for (e in playerSoldiersUI.entities)	entities.push(e);
 		// Enemy actions UI
-		// actionsText = new EnemyActionsText();
+		enemyActionText = new ActionText(false);
+		entities.push(enemyActionText);
+		// Player actions UI
+		playerActionText = new ActionText(true);
+		entities.push(playerActionText);
 		
 		// Spawn enemy tower and king
 		enemyTower = new Tower(false);
@@ -187,22 +192,27 @@ class Level extends Screen
 			if (Controls.isDown(Keyboard.G)) {
 				playerAction = ActionType.ATTACK_FRONT;
 				buttons.select(2);
+				playerActionText.setAnim(Sprites.TEXT_LOADING);
 			}
 			else if (Controls.isDown(Keyboard.H)) {
 				playerAction = ActionType.ATTACK_UP;
 				buttons.select(3);
+				playerActionText.setAnim(Sprites.TEXT_LOADING);
 			}
 			else if (Controls.isDown(Keyboard.D)) {
 				playerAction = ActionType.DEFEND_FRONT;
 				buttons.select(0);
+				playerActionText.setAnim(Sprites.TEXT_LOADING);
 			}
 			else if (Controls.isDown(Keyboard.F)) {
 				playerAction = ActionType.DEFEND_UP;
 				buttons.select(1);
+				playerActionText.setAnim(Sprites.TEXT_LOADING);
 			}
 			else if (Controls.isDown(Keyboard.J)) {
 				playerAction = ActionType.REST;
 				buttons.select(4);
+				playerActionText.setAnim(Sprites.TEXT_LOADING);
 			}
 		}
 		else if (state == LevelState.MOVING)
@@ -245,6 +255,9 @@ class Level extends Screen
 				}
 				// Time before flag showing
 				stateTick = 120;
+				//
+				playerActionText.setAnim(Sprites.BLANK);
+				enemyActionText.setAnim(Sprites.BLANK);
 			}
 		}
 		else if (state == LevelState.CREATING)
@@ -342,6 +355,8 @@ class Level extends Screen
 				state = LevelState.MOVING;
 				// Move soldiers
 				move();
+				updateActionText(playerActionText, playerAction);
+				updateActionText(enemyActionText, enemyAction.action);
 				
 			case LevelState.MOVING:
 				state = LevelState.RESOLVING;
@@ -362,9 +377,10 @@ class Level extends Screen
 				
 			case LevelState.DONE:
 				state = LevelState.CHOOSING_FLAGS;
-				stateTick = 10;
-				if (!checkIfGameOver())
+				stateTick = 1;
+				if (!checkIfGameOver()) {
 					chooseAction();
+				}
 				
 			case LevelState.CREATING:
 				state = LevelState.DONE;
@@ -372,7 +388,7 @@ class Level extends Screen
 				
 			default:
 		}
-		trace(Date.now().getTime() + ": changed state to " + state);
+		// trace(Date.now().getTime() + ": changed state to " + state);
 	}
 	
 	function chooseAction ()
@@ -393,6 +409,9 @@ class Level extends Screen
 		entities.push(flagRight);
 		
 		playerAction = ActionType.IDLE;
+
+		playerActionText.setAnim(Sprites.TEXT_YOUR_TURN);
+		enemyActionText.setAnim(Sprites.TEXT_LOADING);
 	}
 	
 	function propagate () :Int
@@ -768,6 +787,20 @@ class Level extends Screen
 			over = true;
 		}
 		return over;
+	}
+
+	function updateActionText (text:ActionText, action:ActionType)
+	{
+		var id = switch (action)
+		{
+			case ActionType.ATTACK_FRONT:	Sprites.TEXT_CHARGE;
+			case ActionType.ATTACK_UP:		Sprites.TEXT_ARCHERS;
+			case ActionType.DEFEND_FRONT:	Sprites.TEXT_DEFEND;
+			case ActionType.DEFEND_UP:		Sprites.TEXT_SHIELD_UP;
+			case ActionType.REST:			Sprites.TEXT_REST;
+			default:						Sprites.BLANK;
+		}
+		text.setAnim(id);
 	}
 	
 }
