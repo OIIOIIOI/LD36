@@ -8,6 +8,7 @@ import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
+import Particle;
 
 /**
  * ...
@@ -102,6 +103,25 @@ class Game extends Sprite
 			shakeAmount = amount;
 			shakeTick = duration;
 			shakeMode = mode;
+		}
+	}
+	
+	public function spawnParticles (t:ParticleType, px:Float, py:Float, amount:Int = 1)
+	{
+		if (currentScreen == null)	return;
+
+		switch (t)
+		{
+			default:
+				for (i in 0...amount)
+				{
+					var p = new Particle(t);
+					p.x = px + (Std.random(2)*2-1) * 4;
+					p.y = py + (Std.random(2)*2-1) * 4;
+					p.x -= p.cx;
+					p.y -= p.cy;
+					currentScreen.particles.push(p);
+				}
 		}
 	}
 	

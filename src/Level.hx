@@ -2,6 +2,7 @@ package;
 
 import Actions;
 import Game;
+import Particle;
 import haxe.Timer;
 import openfl.display.BitmapData;
 import openfl.ui.Keyboard;
@@ -56,7 +57,7 @@ class Level extends Screen
 	var gameIsOver:Bool;
 	
 	var buttons:Buttons;
-	var actionsText:EnemyActionsText;
+	// var actionsText:EnemyActionsText;
 	
 	var propagTime:Int;
 
@@ -118,7 +119,7 @@ class Level extends Screen
 		playerSoldiersUI = new UISoldiers(playerSoldiersMax, Game.WIDTH - 190);
 		for (e in playerSoldiersUI.entities)	entities.push(e);
 		// Enemy actions UI
-		actionsText = new EnemyActionsText();
+		// actionsText = new EnemyActionsText();
 		
 		// Spawn enemy tower and king
 		enemyTower = new Tower(false);
@@ -183,23 +184,24 @@ class Level extends Screen
 		if (state == LevelState.PROPAGATING && playerAction == ActionType.IDLE)
 		{
 			// Check controls
-			if (Controls.isDown(Keyboard.LEFT)) {
+			if (Controls.isDown(Keyboard.G)) {
 				playerAction = ActionType.ATTACK_FRONT;
 				buttons.select(2);
+				Game.INST.spawnParticles(ParticleType.DEFAULT, Game.WIDTH / 2, Game.HEIGHT / 2, 42);
 			}
-			else if (Controls.isDown(Keyboard.UP)) {
+			else if (Controls.isDown(Keyboard.H)) {
 				playerAction = ActionType.ATTACK_UP;
 				buttons.select(3);
 			}
-			else if (Controls.isDown(Keyboard.RIGHT)) {
+			else if (Controls.isDown(Keyboard.D)) {
 				playerAction = ActionType.DEFEND_FRONT;
 				buttons.select(0);
 			}
-			else if (Controls.isDown(Keyboard.DOWN)) {
+			else if (Controls.isDown(Keyboard.F)) {
 				playerAction = ActionType.DEFEND_UP;
 				buttons.select(1);
 			}
-			else if (Controls.isDown(Keyboard.SPACE)) {
+			else if (Controls.isDown(Keyboard.J)) {
 				playerAction = ActionType.REST;
 				buttons.select(4);
 			}

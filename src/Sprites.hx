@@ -61,6 +61,8 @@ class Sprites
 	static public var TITLE_SCREEN_TITLE:String = "title_screen_title";
 	static public var TITLE_SCREEN_TOWER:String = "title_screen_tower";
 	static public var TITLE_SCREEN_BG:String = "title_screen_bg";
+
+	static public var DEFAULT_PART:String = "default_part";
 	
 	
 	static var sprites:Map<String, SpriteSheet>;
@@ -142,6 +144,9 @@ class Sprites
 		sprites.set(TITLE_SCREEN_BG,	{ data:Assets.getBitmapData("img/bg_title_screen.png"), frames:1, delay:8 });
 		sprites.set(TITLE_SCREEN_TOWER,	{ data:Assets.getBitmapData("img/tower_title_screen.png"), frames:1, delay:8 });
 		sprites.set(TITLE_SCREEN_TITLE,	{ data:Assets.getBitmapData("img/title_screen.png"), frames:1, delay:8 });
+
+		// Particles
+		sprites.set(DEFAULT_PART, { data:new BitmapData(8, 8, false, 0xFFFFFFFF), frames:1, delay:0 });
 	}
 	
 	static public function getSheet (id:String) :SpriteSheet

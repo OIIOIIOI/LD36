@@ -9,10 +9,12 @@ class Screen
 {
 	
 	public var entities:Array<Entity>;
+	public var particles:Array<Entity>;
 
 	public function new ()
 	{
 		entities = [];
+		particles = [];
 	}
 	
 	public function update ()
@@ -21,12 +23,17 @@ class Screen
 		for (e in entities) {
 			e.update();
 		}
+		// Update particles
+		for (p in particles) {
+			p.update();
+		}
 	}
 	
 	public function filterDead ()
 	{
 		// Clean up dead entities
 		entities = entities.filter(Game.INST.filterDead);
+		particles = particles.filter(Game.INST.filterDead);
 	}
 	
 	public function postUpdate ()
@@ -34,6 +41,10 @@ class Screen
 		// Post update entities
 		for (e in entities) {
 			e.postUpdate();
+		}
+		// Update particles
+		for (p in particles) {
+			p.postUpdate();
 		}
 	}
 	
@@ -43,6 +54,7 @@ class Screen
 		canvasData.fillRect(canvasData.rect, 0xFF1CEC96);
 		// Render entities
 		renderArray(entities, canvasData);
+		renderArray(particles, canvasData);
 	}
 	
 	function renderArray (a:Array<Entity>, canvasData:BitmapData)

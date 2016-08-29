@@ -16,10 +16,11 @@ class Controls
 	{
 		// Setup all useful keys
 		keys = new Map();
-		keys.set(Keyboard.UP, false);
-		keys.set(Keyboard.RIGHT, false);
-		keys.set(Keyboard.DOWN, false);
-		keys.set(Keyboard.LEFT, false);
+		keys.set(Keyboard.D, false);
+		keys.set(Keyboard.F, false);
+		keys.set(Keyboard.G, false);
+		keys.set(Keyboard.H, false);
+		keys.set(Keyboard.J, false);
 		keys.set(Keyboard.SPACE, false);
 		
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
