@@ -2,7 +2,6 @@ package;
 
 import Game;
 import Particle;
-import haxe.Timer;
 
 /**
  * ...
