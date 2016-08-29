@@ -1,5 +1,7 @@
 package;
 
+import Particle;
+
 /**
  * ...
  * @author 01101101
@@ -102,6 +104,9 @@ class Soldier extends Entity
 	{
 		health--;
 		isDead = health <= 0;
+		
+		Game.INST.spawnParticles(ParticleType.BLOOD, x + w / 2, y + h / 2, 4);
+		
 	}
 	
 	public function think (t:Int)
