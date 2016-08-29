@@ -51,8 +51,8 @@ class Buttons
 				buttons[i].icon.roy = 5;
 			}
 			else {
-				buttons[i].frame = 1;
-				buttons[i].icon.roy = 5;
+				buttons[i].frame = 0;
+				buttons[i].icon.roy = 0;
 			}
 			buttons[i].setBlinking(false);
 		}

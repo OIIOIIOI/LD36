@@ -200,26 +200,31 @@ class Level extends Screen
 				playerAction = ActionType.ATTACK_FRONT;
 				buttons.select(2);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
+				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 			else if (Controls.isDown(Keyboard.H)) {
 				playerAction = ActionType.ATTACK_UP;
 				buttons.select(3);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
+				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 			else if (Controls.isDown(Keyboard.D)) {
 				playerAction = ActionType.DEFEND_FRONT;
 				buttons.select(0);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
+				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 			else if (Controls.isDown(Keyboard.F)) {
 				playerAction = ActionType.DEFEND_UP;
 				buttons.select(1);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
+				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 			else if (Controls.isDown(Keyboard.J)) {
 				playerAction = ActionType.REST;
 				buttons.select(4);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
+				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 		}
 		else if (state == LevelState.MOVING)
@@ -357,6 +362,7 @@ class Level extends Screen
 		{
 			case LevelState.CHOOSING_FLAGS:
 				state = LevelState.PROPAGATING;
+				Game.INST.addChild(Game.INST.clickButtons);
 				buttons.allowChoice();
 				stateTick = propagate();
 				
@@ -366,6 +372,8 @@ class Level extends Screen
 				move();
 				updateActionText(playerActionText, playerAction);
 				updateActionText(enemyActionText, enemyAction.action);
+				buttons.reset();
+				Game.INST.removeChild(Game.INST.clickButtons);
 				
 			case LevelState.MOVING:
 				state = LevelState.RESOLVING;
@@ -820,6 +828,30 @@ class Level extends Screen
 			default:						Sprites.BLANK;
 		}
 		text.setAnim(id);
+	}
+
+	public function click (a:ActionType)
+	{
+		if (state == LevelState.PROPAGATING && playerAction == ActionType.IDLE)
+		{
+			playerAction = a;
+			switch (a)
+			{
+				case ActionType.ATTACK_FRONT:
+					buttons.select(2);
+				case ActionType.ATTACK_UP:
+					buttons.select(3);
+				case ActionType.DEFEND_FRONT:
+					buttons.select(0);
+				case ActionType.DEFEND_UP:
+					buttons.select(1);
+				case ActionType.REST:
+					buttons.select(4);
+				default:
+			}
+			playerActionText.setAnim(Sprites.TEXT_LOADING);
+			Game.INST.removeChild(Game.INST.clickButtons);
+		}
 	}
 	
 }
