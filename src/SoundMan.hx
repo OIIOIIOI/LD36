@@ -19,6 +19,7 @@ class SoundMan
 	static public var ORDER:String = "snd/order";
 	static public var EXPLOSION:String = "snd/explosion";
 	static public var FLAG:String = "snd/flag";
+	static public var BOW:String = "snd/bow";
 
 	static public var MUSIC:String = "snd/Overworld.mp3";
 	
