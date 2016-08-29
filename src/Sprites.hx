@@ -73,6 +73,7 @@ class Sprites
 	static public var TOWER_PART_1:String = "tower_part_1";
 	static public var TOWER_PART_2:String = "tower_part_2";
 	static public var TOWER_PART_3:String = "tower_part_3";
+	static public var BLOOD_PART:String = "blood_part";
 	
 	
 	static var sprites:Map<String, SpriteSheet>;
@@ -166,6 +167,7 @@ class Sprites
 		sprites.set(TOWER_PART_1, { data:Assets.getBitmapData("img/part_tower_01.png"), frames:8, delay:8 });
 		sprites.set(TOWER_PART_2, { data:Assets.getBitmapData("img/part_tower_02.png"), frames:2, delay:8 });
 		sprites.set(TOWER_PART_3, { data:Assets.getBitmapData("img/part_tower_03.png"), frames:3, delay:8 });
+		sprites.set(BLOOD_PART, { data:Assets.getBitmapData("img/blood.png"), frames:20, delay:1 });
 	}
 	
 	static public function getSheet (id:String) :SpriteSheet

@@ -39,9 +39,14 @@ class Particle extends Entity
 				else if (r == 2) 	setAnim(Sprites.TOWER_PART_2);
 				else 				setAnim(Sprites.TOWER_PART_3);
 				
-				
 				xVel = (Std.random(2) * 2 - 1) * (Math.random() * 6);
 				yVel = -5 - Math.random() * 7;
+				
+			case ParticleType.BLOOD:
+				lifetime = 20 + Std.random(20);
+				setAnim(Sprites.BLOOD_PART);
+				xVel = (Std.random(2) * 2 - 1) * (Math.random() * 4);
+				yVel = -4 - Math.random() * 4;
 
 			default:
 				lifetime = 80 + Std.random(120);
@@ -81,4 +86,5 @@ enum ParticleType
 	DEFAULT;
 	EXAMPLE;
 	TOWER;
+	BLOOD;
 }
