@@ -95,6 +95,7 @@ class TitleScreen extends Screen
 	private function onClick(e:MouseEvent):Void 
 	{
 		Game.INST.removeEventListener(MouseEvent.CLICK, onClick);
+		Game.INST.buttonMode = false;
 		openLevelScreen();
 	}
 	
