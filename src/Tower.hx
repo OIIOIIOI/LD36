@@ -1,6 +1,8 @@
 package;
 
 import Game;
+import Particle;
+import haxe.Timer;
 
 /**
  * ...
@@ -24,6 +26,14 @@ class Tower extends Entity
 		if (isPlayer)	x = Game.WIDTH - w;
 		y = Game.HEIGHT - 100;
 		roy = -h + (Std.random(2) * 2 - 1) * 20;
+		
+		// Test anim hurt
+		/*
+		var t:Timer = new Timer(3000);
+		t.run = function():Void {
+			hurt();
+		};
+		*/
 	}
 	
 	function updateAnim ()
@@ -42,6 +52,8 @@ class Tower extends Entity
 		health--;
 		updateAnim();
 		Game.INST.shake(5, 45, ShakeMode.OMNI);
+		Game.INST.spawnParticles(ParticleType.TOWER, x - w / 2 + 140, y - h / 2 - 30, 10);
+		
 	}
 	
 }

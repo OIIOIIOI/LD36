@@ -187,7 +187,6 @@ class Level extends Screen
 			if (Controls.isDown(Keyboard.G)) {
 				playerAction = ActionType.ATTACK_FRONT;
 				buttons.select(2);
-				Game.INST.spawnParticles(ParticleType.DEFAULT, Game.WIDTH / 2, Game.HEIGHT / 2, 42);
 			}
 			else if (Controls.isDown(Keyboard.H)) {
 				playerAction = ActionType.ATTACK_UP;

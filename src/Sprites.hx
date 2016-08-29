@@ -63,6 +63,9 @@ class Sprites
 	static public var TITLE_SCREEN_BG:String = "title_screen_bg";
 
 	static public var DEFAULT_PART:String = "default_part";
+	static public var TOWER_PART_1:String = "tower_part_1";
+	static public var TOWER_PART_2:String = "tower_part_2";
+	static public var TOWER_PART_3:String = "tower_part_3";
 	
 	
 	static var sprites:Map<String, SpriteSheet>;
@@ -146,7 +149,10 @@ class Sprites
 		sprites.set(TITLE_SCREEN_TITLE,	{ data:Assets.getBitmapData("img/title_screen.png"), frames:1, delay:8 });
 
 		// Particles
-		sprites.set(DEFAULT_PART, { data:new BitmapData(8, 8, false, 0xFFFFFFFF), frames:1, delay:0 });
+		sprites.set(DEFAULT_PART, { data:new BitmapData(8, 8, false, 0xFFFFFFFF), frames:1, delay:0 } );
+		sprites.set(TOWER_PART_1, { data:Assets.getBitmapData("img/part_tower_01.png"), frames:8, delay:8 });
+		sprites.set(TOWER_PART_2, { data:Assets.getBitmapData("img/part_tower_02.png"), frames:2, delay:8 });
+		sprites.set(TOWER_PART_3, { data:Assets.getBitmapData("img/part_tower_03.png"), frames:3, delay:8 });
 	}
 	
 	static public function getSheet (id:String) :SpriteSheet
