@@ -39,6 +39,7 @@ class Buttons
 		for (b in buttons) {
 			b.frame = 2;
 			b.icon.roy = 0;
+			b.setBlinking(true);
 		}
 	}
 	
@@ -53,6 +54,7 @@ class Buttons
 				buttons[i].frame = 1;
 				buttons[i].icon.roy = 5;
 			}
+			buttons[i].setBlinking(false);
 		}
 	}
 	
@@ -61,6 +63,7 @@ class Buttons
 		for (b in buttons) {
 			b.frame = 0;
 			b.icon.roy = 0;
+			b.setBlinking(false);
 		}
 	}
 	
