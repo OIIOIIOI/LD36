@@ -22,6 +22,8 @@ class Sprites
 	static public var BANNER_VICTORY:String = "banner_victory";
 	static public var BUTTON:String = "button";
 	static public var BUTTON_ICON:String = "button_icon";
+	static public var ENEMY_ACTIONS_TEXT:String = "enemy_actions_text";
+	static public var ENEMY_ACTIONS_LOADING:String = "enemy_actions_loading";
 	
 	static public var TOWER_A:String = "tower_a";
 	static public var TOWER_B:String = "tower_b";
@@ -78,6 +80,8 @@ class Sprites
 		sprites.set(BANNER_VICTORY, { data:Assets.getBitmapData("img/popup_victory.png"), frames:1, delay:8 });
 		sprites.set(BUTTON, { data:Assets.getBitmapData("img/btn_action.png"), frames:4, delay:8 });
 		sprites.set(BUTTON_ICON, { data:Assets.getBitmapData("img/btn_icon.png"), frames:5, delay:8 });
+		sprites.set(ENEMY_ACTIONS_TEXT, { data:Assets.getBitmapData("img/text_actions.png"), frames:5, delay:8 });
+		sprites.set(ENEMY_ACTIONS_LOADING, { data:Assets.getBitmapData("img/actions_loading.png"), frames:4, delay:8 });
 		// Tower
 		sprites.set(TOWER_A + LEFT,	{ data:Assets.getBitmapData("img/tower_1.png"), frames:1, delay:8 });
 		sprites.set(TOWER_A + RIGHT,	flipAnim(TOWER_A + LEFT));

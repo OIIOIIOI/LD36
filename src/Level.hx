@@ -56,6 +56,7 @@ class Level extends Screen
 	var gameIsOver:Bool;
 	
 	var buttons:Buttons;
+	var actionsText:EnemyActionsText;
 	
 	var propagTime:Int;
 
@@ -116,6 +117,8 @@ class Level extends Screen
 		// Player soldiers UI
 		playerSoldiersUI = new UISoldiers(playerSoldiersMax, Game.WIDTH - 190);
 		for (e in playerSoldiersUI.entities)	entities.push(e);
+		// Enemy actions UI
+		actionsText = new EnemyActionsText();
 		
 		// Spawn enemy tower and king
 		enemyTower = new Tower(false);
