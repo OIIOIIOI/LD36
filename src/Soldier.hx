@@ -106,7 +106,7 @@ class Soldier extends Entity
 		isDead = health <= 0;
 		
 		Game.INST.spawnParticles(ParticleType.BLOOD, x + w / 2, y + h / 2, 4);
-		
+		SoundMan.playOnce(SoundMan.HIT);
 	}
 	
 	public function think (t:Int)

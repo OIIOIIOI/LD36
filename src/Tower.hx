@@ -2,6 +2,7 @@ package;
 
 import Game;
 import Particle;
+import haxe.Timer;
 
 /**
  * ...
@@ -52,7 +53,7 @@ class Tower extends Entity
 		updateAnim();
 		Game.INST.shake(5, 45, ShakeMode.OMNI);
 		Game.INST.spawnParticles(ParticleType.TOWER, x - w / 2 + 140, y - h / 2 - 30, 10);
-		
+		SoundMan.playOnce(SoundMan.EXPLOSION);
 	}
 	
 }
