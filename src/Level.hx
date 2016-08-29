@@ -506,6 +506,7 @@ class Level extends Screen
 		{
 			killRandomSoldier(false, false);
 			killRandomSoldier(true, false);
+			SoundMan.playOnce(SoundMan.FAIL);
 		}
 		// If player lance attack
 		else if (playerAction == ActionType.ATTACK_FRONT &&
@@ -528,12 +529,14 @@ class Level extends Screen
 				playerAction == ActionType.ATTACK_UP))
 		{
 			killRandomSoldier(true, false);
+			SoundMan.playOnce(SoundMan.FAIL);
 		}
 		// If enemy lance attack against tower
 		else if (enemyAction.action == ActionType.ATTACK_FRONT &&
 				playerAction == ActionType.REST)
 		{
 			hurtTower(true);
+			SoundMan.playOnce(SoundMan.FAIL);
 		}
 	}
 	
@@ -564,6 +567,7 @@ class Level extends Screen
 			// Both lose a soldier
 			killRandomSoldier(false, true);
 			killRandomSoldier(true, true);
+			SoundMan.playOnce(SoundMan.FAIL);
 		}
 		// ATTACK_UP vs DEFEND_FRONT or IDLE
 		else if (enemyAction.action == ActionType.ATTACK_UP &&
@@ -572,6 +576,7 @@ class Level extends Screen
 		{
 			// Player loses a soldier
 			killRandomSoldier(true, true);
+			SoundMan.playOnce(SoundMan.FAIL);
 		}
 		// ATTACK_UP vs REST
 		else if (enemyAction.action == ActionType.ATTACK_UP &&
@@ -637,6 +642,7 @@ class Level extends Screen
 			// Enemy regains a soldier
 			var p = getSpawnSpot(false);
 			spawnNewSoldier(false, p[0], p[1]);
+			SoundMan.playOnce(SoundMan.FAIL);
 		}
 		// REST vs REST
 		else if (enemyAction.action == ActionType.REST &&

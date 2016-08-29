@@ -18,6 +18,7 @@ class Main extends Sprite
 		Sprites.init();
 		Controls.init();
 		Flags.init();
+		SoundMan.init();
 		
 		Lib.current.stage.addChild(new Game());
 	}
