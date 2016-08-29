@@ -1,5 +1,8 @@
 package;
 import haxe.Timer;
+import motion.Actuate;
+import motion.easing.Back;
+import openfl.events.MouseEvent;
 import openfl.ui.Keyboard;
 
 /**
@@ -30,8 +33,10 @@ class TitleScreen extends Screen
 		entities.push(tower);
 		
 		var title = new TitleScreenTitle();
+		title.y = -title.h;
 		entities.push(title);
 		
+		Actuate.tween(title, 1, { y:20 } ).delay(1).ease(Back.easeOut);
 		
 		var soldierPosList = [
 			{x:293, y:728},
@@ -81,6 +86,16 @@ class TitleScreen extends Screen
 			
 			entities.push(soldier);
 		}
+		
+		Game.INST.addEventListener(MouseEvent.CLICK, onClick);
+		Game.INST.buttonMode = true;
+		
+	}
+	
+	private function onClick(e:MouseEvent):Void 
+	{
+		Game.INST.removeEventListener(MouseEvent.CLICK, onClick);
+		openLevelScreen();
 	}
 	
 	function setReady ()
@@ -94,9 +109,13 @@ class TitleScreen extends Screen
 		
 		if (isReady && Controls.isDown(Keyboard.SPACE))
 		{
-			isReady = false;
-			Game.INST.changeScreen(new Level(Game.INST.stageDifficulty));
+			openLevelScreen();
 		}
+	}
+	
+	private function openLevelScreen() {	
+		isReady = false;
+		Game.INST.changeScreen(new Level(Game.INST.stageDifficulty));
 	}
 	
 }
