@@ -9,6 +9,8 @@ import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 import Particle;
+import openfl.events.MouseEvent;
+import Actions;
 
 /**
  * ...
@@ -36,6 +38,8 @@ class Game extends Sprite
 	
 	public var stageDifficulty:Int = 0;
 
+	public var clickButtons:Sprite;
+
 	public function new () 
 	{
 		if (INST != null)
@@ -51,11 +55,73 @@ class Game extends Sprite
 		canvas.x = canvas.y = 0;
 		addChild(canvas);
 		
+		clickButtons = new Sprite();
+		for (i in 0...5)
+		{
+			var b = new Sprite();
+			b.graphics.beginFill(Std.random(256*256*256), 0);
+			b.graphics.drawRect(5, 5, 80, 80);
+			b.graphics.endFill();
+			b.buttonMode = true;
+			b.x = 90 * i;
+			clickButtons.addChild(b);
+
+			if (i == 0)			b.addEventListener(MouseEvent.CLICK, clickHandlerA);
+			else if (i == 1)	b.addEventListener(MouseEvent.CLICK, clickHandlerB);
+			else if (i == 2)	b.addEventListener(MouseEvent.CLICK, clickHandlerC);
+			else if (i == 3)	b.addEventListener(MouseEvent.CLICK, clickHandlerD);
+			else if (i == 4)	b.addEventListener(MouseEvent.CLICK, clickHandlerE);
+		}
+		clickButtons.x = 255;
+		clickButtons.y = HEIGHT - 120;
+		// addChild(clickButtons);
+
 		addEventListener(Event.ENTER_FRAME, update);
 		
 		changeScreen(new TitleScreen());
 
 		SoundMan.playLoop(SoundMan.MUSIC);
+	}
+
+	public function clickHandlerA (e:MouseEvent)
+	{
+		var lvl:Level;
+		if (currentScreen != null && Std.is(currentScreen, Level)) {
+			lvl = cast currentScreen;
+			lvl.click(ActionType.DEFEND_FRONT);
+		}
+	}
+	public function clickHandlerB (e:MouseEvent)
+	{
+		var lvl:Level;
+		if (currentScreen != null && Std.is(currentScreen, Level)) {
+			lvl = cast currentScreen;
+			lvl.click(ActionType.DEFEND_UP);
+		}
+	}
+	public function clickHandlerC (e:MouseEvent)
+	{
+		var lvl:Level;
+		if (currentScreen != null && Std.is(currentScreen, Level)) {
+			lvl = cast currentScreen;
+			lvl.click(ActionType.ATTACK_FRONT);
+		}
+	}
+	public function clickHandlerD (e:MouseEvent)
+	{
+		var lvl:Level;
+		if (currentScreen != null && Std.is(currentScreen, Level)) {
+			lvl = cast currentScreen;
+			lvl.click(ActionType.ATTACK_UP);
+		}
+	}
+	public function clickHandlerE (e:MouseEvent)
+	{
+		var lvl:Level;
+		if (currentScreen != null && Std.is(currentScreen, Level)) {
+			lvl = cast currentScreen;
+			lvl.click(ActionType.REST);
+		}
 	}
 	
 	public function changeScreen (s:Screen)
