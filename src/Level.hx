@@ -813,8 +813,21 @@ class Level extends Screen
 			entities.push(new BannerText(false));
 			over = true;
 		}
+
+		/*if (over)
+		{
+			Game.INST.addEventListener(MouseEvent.CLICK, onClick);
+			Game.INST.buttonMode = true;
+		}*/
+
 		return over;
 	}
+	
+	/*function onClick (e:MouseEvent)
+	{
+		Game.INST.removeEventListener(MouseEvent.CLICK, onClick);
+		Game.INST.buttonMode = false;
+	}*/
 
 	function updateActionText (text:ActionText, action:ActionType)
 	{
