@@ -54,6 +54,8 @@ class Game extends Sprite
 		addEventListener(Event.ENTER_FRAME, update);
 		
 		changeScreen(new TitleScreen());
+
+		SoundMan.playLoop(SoundMan.MUSIC);
 	}
 	
 	public function changeScreen (s:Screen)

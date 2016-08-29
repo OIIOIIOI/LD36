@@ -12,9 +12,11 @@ import openfl.media.SoundChannel;
 class SoundMan
 {
 	
-	static public var VOL_MOD:Float = 0.75;
+	static public var VOL_MOD:Float = 1;
 
 	static public var FAIL:String = "snd/fail";
+
+	static public var MUSIC:String = "snd/Overworld.mp3";
 	
 	static var channels:Map<String, SoundChannel>;
 
@@ -40,7 +42,7 @@ class SoundMan
 		snd.play(0, 0, st);
 	}
 	
-	static public function playLoop (s:String, vol:Float = 1)
+	static public function playLoop (s:String, vol:Float = 0.8)
 	{
 		if (channels.exists(s)) {
 			channels.get(s).stop();
@@ -50,7 +52,7 @@ class SoundMan
 
 		vol *= VOL_MOD;
 		// Get sound
-		var snd = Assets.getSound(s + ext);
+		var snd = (s == MUSIC) ? Assets.getSound(s) : Assets.getSound(s + ext);
 		if (snd == null)
 			return;
 		// Play sound
