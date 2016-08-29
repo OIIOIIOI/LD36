@@ -31,7 +31,7 @@ class Actions
 				length--;
 		}
 		return actions[Std.random(length)];
-		// return actions[0];
+		// return actions[1];
 	}
 	
 }

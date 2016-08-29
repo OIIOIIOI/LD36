@@ -81,7 +81,7 @@ class Level extends Screen
 		// Set max soldiers
 		playerSoldiersMax = switch (stage)
 		{
-			case 0:		7;
+			case 0:		7;//7
 			case 1:		6;
 			case 2:		5;
 			case 3:		4;
@@ -363,7 +363,8 @@ class Level extends Screen
 			case LevelState.DONE:
 				state = LevelState.CHOOSING_FLAGS;
 				stateTick = 10;
-				chooseAction();
+				if (!checkIfGameOver())
+					chooseAction();
 				
 			case LevelState.CREATING:
 				state = LevelState.DONE;
@@ -745,6 +746,28 @@ class Level extends Screen
 			var bannerText = new BannerText(!forPlayer);
 			entities.push(bannerText);
 		}
+	}
+
+	function checkIfGameOver () :Bool
+	{
+		var over = false;
+		if (enemySoldiers.length == 0)
+		{
+			gameIsOver = true;
+			state = LevelState.VICTORY;
+			Game.INST.stageDifficulty++;
+			entities.push(new BannerText(true));
+			over = true;
+		}
+		else if (playerSoldiers.length == 0)
+		{
+			gameIsOver = true;
+			state = LevelState.DEFEAT;
+			Game.INST.stageDifficulty = 0;
+			entities.push(new BannerText(false));
+			over = true;
+		}
+		return over;
 	}
 	
 }
