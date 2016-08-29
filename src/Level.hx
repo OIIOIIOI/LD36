@@ -41,6 +41,8 @@ class Level extends Screen
 	
 	var flagLeft:Flag;
 	var flagRight:Flag;
+	var bigFlagLeft:BigFlag;
+	var bigFlagRight:BigFlag;
 	
 	var state:LevelState;
 	var stateTick:Int;
@@ -125,6 +127,11 @@ class Level extends Screen
 		// Player actions UI
 		playerActionText = new ActionText(true);
 		entities.push(playerActionText);
+		// Big flags
+		bigFlagLeft = new BigFlag(Sprites.BLANK, true);
+		entities.push(bigFlagLeft);
+		bigFlagRight = new BigFlag(Sprites.BLANK, false);
+		entities.push(bigFlagRight);
 		
 		// Spawn enemy tower and king
 		enemyTower = new Tower(false);
@@ -145,7 +152,7 @@ class Level extends Screen
 			var tx = ENEMY_FRONT_LINE - LARGE_SPREAD / 2;
 			tx += sx * txArray.splice(Std.random(txArray.length), 1)[0] - 32;
 			var ty = sy * tyArray.splice(Std.random(tyArray.length), 1)[0];
-			ty += (Game.HEIGHT - 100) * 0.3;
+			ty += (Game.HEIGHT - 100) * 0.2;
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
 			Timer.delay(spawnNewSoldier.bind(false, Std.int(tx), Std.int(ty)), (i+1) * 200 + (Std.random(2) * 2 - 1) * Std.random(150));
 		}
@@ -170,7 +177,7 @@ class Level extends Screen
 			var tx = PLAYER_FRONT_LINE - LARGE_SPREAD / 2;
 			tx += sx * txArray.splice(Std.random(txArray.length), 1)[0] + 32;
 			var ty = sy * tyArray.splice(Std.random(tyArray.length), 1)[0];
-			ty += (Game.HEIGHT - 100) * 0.3;
+			ty += (Game.HEIGHT - 100) * 0.2;
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
 			Timer.delay(spawnNewSoldier.bind(true, Std.int(tx), Std.int(ty)), (i+1) * 200 + (Std.random(2) * 2 - 1) * Std.random(150));
 		}
@@ -258,6 +265,8 @@ class Level extends Screen
 				//
 				playerActionText.setAnim(Sprites.BLANK);
 				enemyActionText.setAnim(Sprites.BLANK);
+				bigFlagLeft.setAnim(Sprites.BLANK);
+				bigFlagRight.setAnim(Sprites.BLANK);
 			}
 		}
 		else if (state == LevelState.CREATING)
@@ -401,12 +410,16 @@ class Level extends Screen
 		flagLeft.x = enemyKing.x - flagLeft.w * 0.9 + 30;
 		flagLeft.y = enemyKing.y - flagLeft.zOffset;
 		entities.push(flagLeft);
+
+		bigFlagLeft.setAnim(Sprites.BIG + enemyAction.flags[0].variant);
 		
 		if (flagRight != null)	entities.remove(flagRight);
 		flagRight = new Flag(enemyAction.flags[1].variant);
 		flagRight.x = enemyKing.x + 30;
 		flagRight.y = enemyKing.y - flagRight.zOffset;
 		entities.push(flagRight);
+
+		bigFlagRight.setAnim(Sprites.BIG + enemyAction.flags[1].variant);
 		
 		playerAction = ActionType.IDLE;
 
@@ -712,7 +725,7 @@ class Level extends Screen
 			var i = 0;
 			if (tyArray.length > 2 && Std.random(4) == 0)	i = 1;
 			var ty = sy * tyArray.splice(i, 1)[0];
-			ty += (Game.HEIGHT - 100) * 0.3;
+			ty += (Game.HEIGHT - 100) * 0.2;
 			ty += (Std.random(2) * 2 - 1) * Std.random(16);
 			
 			s.moveTo(tx, ty, idleOnArrival);

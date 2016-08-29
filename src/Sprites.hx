@@ -13,6 +13,7 @@ class Sprites
 	
 	static public var RIGHT:String = "_right";
 	static public var LEFT:String = "_left";
+	static public var BIG:String = "big";
 
 	static public var BLANK:String = "";
 	
@@ -148,6 +149,28 @@ class Sprites
 		sprites.set(FLAG_H + LEFT,	flipAnim(FLAG_H + RIGHT));
 		sprites.set(FLAG_I + LEFT,	flipAnim(FLAG_I + RIGHT));
 		sprites.set(FLAG_J + LEFT,	flipAnim(FLAG_J + RIGHT));
+		// Big flags
+		sprites.set(BIG + FLAG_A + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_a.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_B + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_b.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_C + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_c.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_D + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_d.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_E + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_e.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_F + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_f.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_G + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_g.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_H + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_h.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_I + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_i.png"), frames:1, delay:8 });
+		sprites.set(BIG + FLAG_J + RIGHT,	{ data:Assets.getBitmapData("img/bigFlag/flag_j.png"), frames:1, delay:8 });
+		// Big flags flipped
+		sprites.set(BIG + FLAG_A + LEFT,	flipAnim(BIG + FLAG_A + RIGHT));
+		sprites.set(BIG + FLAG_B + LEFT,	flipAnim(BIG + FLAG_B + RIGHT));
+		sprites.set(BIG + FLAG_C + LEFT,	flipAnim(BIG + FLAG_C + RIGHT));
+		sprites.set(BIG + FLAG_D + LEFT,	flipAnim(BIG + FLAG_D + RIGHT));
+		sprites.set(BIG + FLAG_E + LEFT,	flipAnim(BIG + FLAG_E + RIGHT));
+		sprites.set(BIG + FLAG_F + LEFT,	flipAnim(BIG + FLAG_F + RIGHT));
+		sprites.set(BIG + FLAG_G + LEFT,	flipAnim(BIG + FLAG_G + RIGHT));
+		sprites.set(BIG + FLAG_H + LEFT,	flipAnim(BIG + FLAG_H + RIGHT));
+		sprites.set(BIG + FLAG_I + LEFT,	flipAnim(BIG + FLAG_I + RIGHT));
+		sprites.set(BIG + FLAG_J + LEFT,	flipAnim(BIG + FLAG_J + RIGHT));
 		// Arrows
 		sprites.set(ARROW + LEFT,	{ data:Assets.getBitmapData("img/arrow.png"), frames:10, delay:9999 });
 		sprites.set(ARROW + RIGHT,	flipAnim(ARROW + LEFT));

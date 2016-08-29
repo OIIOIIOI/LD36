@@ -12,7 +12,7 @@ class UIWood extends Entity
 		super();
 		setAnim(Sprites.UI_WOOD);
 		y = Game.HEIGHT + 500;
-		roy = -h - 500;
+		roy = -h - 500 + 2;
 	}
 	
 }
