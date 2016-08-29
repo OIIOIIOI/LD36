@@ -57,6 +57,12 @@ class Sprites
 	
 	static public var BLOOD:String = "blood";
 	
+	// Title screen
+	static public var TITLE_SCREEN_TITLE:String = "title_screen_title";
+	static public var TITLE_SCREEN_TOWER:String = "title_screen_tower";
+	static public var TITLE_SCREEN_BG:String = "title_screen_bg";
+	
+	
 	static var sprites:Map<String, SpriteSheet>;
 	
 	static public function init ()
@@ -131,7 +137,11 @@ class Sprites
 		sprites.set(EMOTE_REST,		{ data:Assets.getBitmapData("img/icon_sleep.png"), frames:5, delay:8 });
 		sprites.set(EMOTE_THINK,	{ data:Assets.getBitmapData("img/icon_think.png"), frames:4, delay:8 });
 		// FX
-		sprites.set(BLOOD,	{ data:Assets.getBitmapData("img/blood_floor.png"), frames:8, delay:8 });
+		sprites.set(BLOOD,	{ data:Assets.getBitmapData("img/blood_floor.png"), frames:8, delay:8 } );
+		// Title screen
+		sprites.set(TITLE_SCREEN_BG,	{ data:Assets.getBitmapData("img/bg_title_screen.png"), frames:1, delay:8 });
+		sprites.set(TITLE_SCREEN_TOWER,	{ data:Assets.getBitmapData("img/tower_title_screen.png"), frames:1, delay:8 });
+		sprites.set(TITLE_SCREEN_TITLE,	{ data:Assets.getBitmapData("img/title_screen.png"), frames:1, delay:8 });
 	}
 	
 	static public function getSheet (id:String) :SpriteSheet
