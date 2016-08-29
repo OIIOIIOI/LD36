@@ -78,7 +78,6 @@ class TitleScreen extends Screen
 			soldier.x = pos.x;
 			soldier.y = pos.y;
 			soldier.moveTo(pos.x, pos.y, true);
-			soldier.think(0);
 			
 			entities.push(soldier);
 		}

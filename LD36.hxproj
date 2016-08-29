@@ -22,7 +22,7 @@
     <class path="C:\HaxeToolkit\haxe\lib\openfl\4,0,3\externs\core\flash" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\4,0,3\externs\core\openfl" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\4,0,3\externs\extras" />
-    <class path="bin\flash\release\haxe" />
+    <class path="bin\flash\debug\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -31,7 +31,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="-swf-version 11.2" />
+    <option additional="-swf-version 11.2&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
