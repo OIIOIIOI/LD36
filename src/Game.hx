@@ -39,6 +39,8 @@ class Game extends Sprite
 	public var stageDifficulty:Int = 0;
 
 	public var clickButtons:Sprite;
+	public var clickScreen:Sprite;
+	public var clickTitleScreen:Sprite;
 
 	public function new () 
 	{
@@ -74,7 +76,20 @@ class Game extends Sprite
 		}
 		clickButtons.x = 255;
 		clickButtons.y = HEIGHT - 120;
-		// addChild(clickButtons);
+
+		clickScreen = new Sprite();
+		clickScreen.graphics.beginFill(0xFFFF00, 0);
+		clickScreen.graphics.drawRect(0, 0, Game.WIDTH, Game.HEIGHT);
+		clickScreen.graphics.endFill();
+		clickScreen.buttonMode = true;
+		clickScreen.addEventListener(MouseEvent.CLICK, clickScreenHandler);
+
+		clickTitleScreen = new Sprite();
+		clickTitleScreen.graphics.beginFill(0x0000FF, 0);
+		clickTitleScreen.graphics.drawRect(0, 0, Game.WIDTH, Game.HEIGHT);
+		clickTitleScreen.graphics.endFill();
+		clickTitleScreen.buttonMode = true;
+		clickTitleScreen.addEventListener(MouseEvent.CLICK, clickTitleScreenHandler);
 
 		addEventListener(Event.ENTER_FRAME, update);
 		
@@ -89,6 +104,8 @@ class Game extends Sprite
 		if (currentScreen != null && Std.is(currentScreen, Level)) {
 			lvl = cast currentScreen;
 			lvl.click(ActionType.DEFEND_FRONT);
+			if (contains(clickButtons))
+				removeChild(clickButtons);
 		}
 	}
 	public function clickHandlerB (e:MouseEvent)
@@ -97,6 +114,8 @@ class Game extends Sprite
 		if (currentScreen != null && Std.is(currentScreen, Level)) {
 			lvl = cast currentScreen;
 			lvl.click(ActionType.DEFEND_UP);
+			if (contains(clickButtons))
+				removeChild(clickButtons);
 		}
 	}
 	public function clickHandlerC (e:MouseEvent)
@@ -105,6 +124,8 @@ class Game extends Sprite
 		if (currentScreen != null && Std.is(currentScreen, Level)) {
 			lvl = cast currentScreen;
 			lvl.click(ActionType.ATTACK_FRONT);
+			if (contains(clickButtons))
+				removeChild(clickButtons);
 		}
 	}
 	public function clickHandlerD (e:MouseEvent)
@@ -113,6 +134,8 @@ class Game extends Sprite
 		if (currentScreen != null && Std.is(currentScreen, Level)) {
 			lvl = cast currentScreen;
 			lvl.click(ActionType.ATTACK_UP);
+			if (contains(clickButtons))
+				removeChild(clickButtons);
 		}
 	}
 	public function clickHandlerE (e:MouseEvent)
@@ -121,6 +144,8 @@ class Game extends Sprite
 		if (currentScreen != null && Std.is(currentScreen, Level)) {
 			lvl = cast currentScreen;
 			lvl.click(ActionType.REST);
+			if (contains(clickButtons))
+				removeChild(clickButtons);
 		}
 	}
 	
@@ -190,6 +215,28 @@ class Game extends Sprite
 					p.y -= p.cy;
 					currentScreen.particles.push(p);
 				}
+		}
+	}
+
+	public function clickScreenHandler (e:Event)
+	{
+		var lvl:Level;
+		if (currentScreen != null && Std.is(currentScreen, Level)) {
+			lvl = cast currentScreen;
+			lvl.clickScreen();
+			if (contains(clickScreen))
+				removeChild(clickScreen);
+		}
+	}
+
+	public function clickTitleScreenHandler (e:Event)
+	{
+		var lvl:TitleScreen;
+		if (currentScreen != null && Std.is(currentScreen, TitleScreen)) {
+			lvl = cast currentScreen;
+			lvl.clickScreen();
+			if (contains(clickTitleScreen))
+				removeChild(clickTitleScreen);
 		}
 	}
 	

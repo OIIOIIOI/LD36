@@ -87,17 +87,19 @@ class TitleScreen extends Screen
 			entities.push(soldier);
 		}
 		
-		Game.INST.addEventListener(MouseEvent.CLICK, onClick);
-		Game.INST.buttonMode = true;
+		Game.INST.addChild(Game.INST.clickTitleScreen);
+		// Game.INST.addEventListener(MouseEvent.CLICK, onClick);
+		// Game.INST.buttonMode = true;
 		
 	}
 	
-	private function onClick(e:MouseEvent):Void 
+	/*private function onClick(e:MouseEvent):Void 
 	{
+		trace("onClick");
 		Game.INST.removeEventListener(MouseEvent.CLICK, onClick);
 		Game.INST.buttonMode = false;
 		openLevelScreen();
-	}
+	}*/
 	
 	function setReady ()
 	{
@@ -110,13 +112,27 @@ class TitleScreen extends Screen
 		
 		if (isReady && Controls.isDown(Keyboard.SPACE))
 		{
-			openLevelScreen();
+			isReady = false;
+			if (Game.INST.contains(Game.INST.clickButtons))		Game.INST.removeChild(Game.INST.clickButtons);
+			if (Game.INST.contains(Game.INST.clickScreen))		Game.INST.removeChild(Game.INST.clickScreen);
+			if (Game.INST.contains(Game.INST.clickTitleScreen))	Game.INST.removeChild(Game.INST.clickTitleScreen);
+			Game.INST.changeScreen(new Level(Game.INST.stageDifficulty));
 		}
 	}
 	
-	private function openLevelScreen() {	
+	public function clickScreen ()
+	{
 		isReady = false;
+		if (Game.INST.contains(Game.INST.clickButtons))		Game.INST.removeChild(Game.INST.clickButtons);
+		if (Game.INST.contains(Game.INST.clickScreen))		Game.INST.removeChild(Game.INST.clickScreen);
+		if (Game.INST.contains(Game.INST.clickTitleScreen))	Game.INST.removeChild(Game.INST.clickTitleScreen);
 		Game.INST.changeScreen(new Level(Game.INST.stageDifficulty));
 	}
+
+	/*private function openLevelScreen() {
+		trace("openLevelScreen");
+		isReady = false;
+		Game.INST.changeScreen(new Level(Game.INST.stageDifficulty));
+	}*/
 	
 }

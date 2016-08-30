@@ -5,6 +5,7 @@ import Game;
 import Particle;
 import haxe.Timer;
 import openfl.display.BitmapData;
+import openfl.events.MouseEvent;
 import openfl.ui.Keyboard;
 
 /**
@@ -92,7 +93,7 @@ class Level extends Screen
 		}
 		enemySoldiersMax = switch (stage)
 		{
-			default:	5;
+			default:	1;//5
 		}
 		propagTime = switch (stage)
 		{
@@ -200,31 +201,26 @@ class Level extends Screen
 				playerAction = ActionType.ATTACK_FRONT;
 				buttons.select(2);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
-				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 			else if (Controls.isDown(Keyboard.H)) {
 				playerAction = ActionType.ATTACK_UP;
 				buttons.select(3);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
-				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 			else if (Controls.isDown(Keyboard.D)) {
 				playerAction = ActionType.DEFEND_FRONT;
 				buttons.select(0);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
-				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 			else if (Controls.isDown(Keyboard.F)) {
 				playerAction = ActionType.DEFEND_UP;
 				buttons.select(1);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
-				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 			else if (Controls.isDown(Keyboard.J)) {
 				playerAction = ActionType.REST;
 				buttons.select(4);
 				playerActionText.setAnim(Sprites.TEXT_LOADING);
-				Game.INST.removeChild(Game.INST.clickButtons);
 			}
 		}
 		else if (state == LevelState.MOVING)
@@ -291,8 +287,12 @@ class Level extends Screen
 		}
 		else if (state == LevelState.DEFEAT || state == LevelState.VICTORY)
 		{
-			if (Controls.isDown(Keyboard.SPACE))
+			if (Controls.isDown(Keyboard.SPACE)) {
+				if (Game.INST.contains(Game.INST.clickButtons))		Game.INST.removeChild(Game.INST.clickButtons);
+				if (Game.INST.contains(Game.INST.clickScreen))		Game.INST.removeChild(Game.INST.clickScreen);
+				if (Game.INST.contains(Game.INST.clickTitleScreen))	Game.INST.removeChild(Game.INST.clickTitleScreen);
 				Game.INST.changeScreen(new TitleScreen());
+			}
 		}
 		
 		enemyKing.x = enemyTower.x + enemyTower.cx - 27;
@@ -791,6 +791,8 @@ class Level extends Screen
 			
 			var bannerText = new BannerText(!forPlayer);
 			entities.push(bannerText);
+
+			Game.INST.addChild(Game.INST.clickScreen);
 		}
 	}
 
@@ -804,6 +806,7 @@ class Level extends Screen
 			Game.INST.stageDifficulty++;
 			entities.push(new BannerText(true));
 			over = true;
+			Game.INST.addChild(Game.INST.clickScreen);
 		}
 		else if (playerSoldiers.length == 0)
 		{
@@ -812,22 +815,11 @@ class Level extends Screen
 			Game.INST.stageDifficulty = 0;
 			entities.push(new BannerText(false));
 			over = true;
+			Game.INST.addChild(Game.INST.clickScreen);
 		}
-
-		/*if (over)
-		{
-			Game.INST.addEventListener(MouseEvent.CLICK, onClick);
-			Game.INST.buttonMode = true;
-		}*/
 
 		return over;
 	}
-	
-	/*function onClick (e:MouseEvent)
-	{
-		Game.INST.removeEventListener(MouseEvent.CLICK, onClick);
-		Game.INST.buttonMode = false;
-	}*/
 
 	function updateActionText (text:ActionText, action:ActionType)
 	{
@@ -864,6 +856,22 @@ class Level extends Screen
 			}
 			playerActionText.setAnim(Sprites.TEXT_LOADING);
 			Game.INST.removeChild(Game.INST.clickButtons);
+		}
+	}
+
+	public function clickScreen ()
+	{
+		if (state == LevelState.VICTORY) {
+			if (Game.INST.contains(Game.INST.clickButtons))		Game.INST.removeChild(Game.INST.clickButtons);
+			if (Game.INST.contains(Game.INST.clickScreen))		Game.INST.removeChild(Game.INST.clickScreen);
+			if (Game.INST.contains(Game.INST.clickTitleScreen))	Game.INST.removeChild(Game.INST.clickTitleScreen);
+			Game.INST.changeScreen(new Level(Game.INST.stageDifficulty));
+		}
+		else {
+			if (Game.INST.contains(Game.INST.clickButtons))		Game.INST.removeChild(Game.INST.clickButtons);
+			if (Game.INST.contains(Game.INST.clickScreen))		Game.INST.removeChild(Game.INST.clickScreen);
+			if (Game.INST.contains(Game.INST.clickTitleScreen))	Game.INST.removeChild(Game.INST.clickTitleScreen);
+			Game.INST.changeScreen(new TitleScreen());
 		}
 	}
 	
