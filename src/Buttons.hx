@@ -45,6 +45,8 @@ class Buttons
 	
 	public function select (bi:Int)
 	{
+		SoundMan.playOnce(SoundMan.ORDER,0.6);
+		
 		for (i in 0...buttons.length) {
 			if (i == bi) {
 				buttons[i].frame = 3;
