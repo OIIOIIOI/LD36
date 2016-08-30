@@ -47,7 +47,7 @@ class SoundMan
 		snd.play(0, 0, st);
 	}
 	
-	static public function playLoop (s:String, vol:Float = 0.3)
+	static public function playLoop (s:String, vol:Float = 0.7)
 	{
 		if (channels.exists(s)) {
 			channels.get(s).stop();

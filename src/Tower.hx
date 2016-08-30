@@ -19,7 +19,7 @@ class Tower extends Entity
 		super();
 		
 		this.isPlayer = isPlayer;
-		health = 1;//3
+		health = 3;//3
 		
 		updateAnim();
 		

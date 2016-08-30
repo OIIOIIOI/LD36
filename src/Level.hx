@@ -93,7 +93,7 @@ class Level extends Screen
 		}
 		enemySoldiersMax = switch (stage)
 		{
-			default:	1;//5
+			default:	5;//5
 		}
 		propagTime = switch (stage)
 		{

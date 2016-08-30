@@ -30,9 +30,9 @@ class Actions
 			if (level.enemySoldiers.length >= level.enemySoldiersMax)
 				length--;
 		}
-		// return actions[Std.random(length)];
+		return actions[Std.random(length)];
 		// return actions[4];
-		return actions[0];
+		// return actions[0];
 	}
 	
 }
