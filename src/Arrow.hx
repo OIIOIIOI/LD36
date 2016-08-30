@@ -27,6 +27,9 @@ class Arrow extends Entity
 		speedY = -speedYmax;
 		
 		speedX += (Std.random(2) * 2 - 1) * (Std.random(15) / 10);
+		
+		SoundMan.playOnce(SoundMan.BOW, 0.2);
+		
 	}
 	
 	override public function update ()
