@@ -1,6 +1,6 @@
 html,
 body {
-  background-color: #07070d;
+  background-color: #000000;
   color: #dcdce4;
   font-family: 'Roboto', sans-serif;
   font-size: 15px;
@@ -15,7 +15,7 @@ p {
 strong,
 .green,
 a {
-  color: #7ad113;
+  color: #FFFFFF;
 }
 .keys {
   font-size: 1.1em;

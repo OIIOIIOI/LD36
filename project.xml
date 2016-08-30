@@ -8,7 +8,7 @@
 	<!-- output -->
 	<app main="Main" file="LD36" path="bin" />
 	
-	<window background="#1CEC96" fps="60" />
+	<window background="#000000" fps="60" />
 	<window width="960" height="640" unless="mobile" />
 	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
 	
